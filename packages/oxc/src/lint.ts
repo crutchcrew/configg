@@ -131,6 +131,8 @@ export const configs = {
 			'no-rest-spread-properties': 'off',
 			'one-var': 'off',
 			'sort-imports': 'off',
+			'sort-keys': 'off',
+			'sort-vars': 'off',
 			'typescript/prefer-readonly-parameter-types': 'off',
 		},
 	},

@@ -1,0 +1,41 @@
+{
+	"name": "@configg/tsconfig",
+	"version": "0.1.0",
+	"description": "Strict tsconfig presets for Bun and Vite projects",
+	"keywords": [
+		"config",
+		"tsconfig",
+		"typescript"
+	],
+	"homepage": "https://github.com/crutchcrew/configg/tree/main/packages/tsconfig#readme",
+	"bugs": {
+		"url": "https://github.com/crutchcrew/configg/issues"
+	},
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/crutchcrew/configg.git",
+		"directory": "packages/tsconfig"
+	},
+	"files": [
+		"src"
+	],
+	"type": "module",
+	"sideEffects": false,
+	"exports": {
+		"./bun": "./src/bun.json",
+		"./client": "./src/client.json",
+		"./vite": "./src/vite.json",
+		"./package.json": "./package.json"
+	},
+	"publishConfig": {
+		"access": "public",
+		"provenance": true
+	},
+	"dependencies": {
+		"@tsconfig/bases": "^1.0.28"
+	},
+	"peerDependencies": {
+		"typescript": "^7"
+	}
+}

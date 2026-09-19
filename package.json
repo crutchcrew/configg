@@ -1,0 +1,89 @@
+{
+	"name": "@configg/bases",
+	"version": "0.1.0",
+	"description": "All @configg presets in one package: oxc and tsconfig",
+	"keywords": [
+		"config",
+		"oxc",
+		"oxfmt",
+		"oxlint",
+		"tsconfig"
+	],
+	"homepage": "https://github.com/crutchcrew/configg#readme",
+	"bugs": {
+		"url": "https://github.com/crutchcrew/configg/issues"
+	},
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/crutchcrew/configg.git"
+	},
+	"workspaces": [
+		"packages/*"
+	],
+	"files": [
+		"packages/*/src/**"
+	],
+	"type": "module",
+	"sideEffects": false,
+	"exports": {
+		"./oxfmt": "./packages/oxc/src/fmt.ts",
+		"./oxlint": "./packages/oxc/src/lint.ts",
+		"./tsconfig/bun": "./packages/tsconfig/src/bun.json",
+		"./tsconfig/client": "./packages/tsconfig/src/client.json",
+		"./tsconfig/vite": "./packages/tsconfig/src/vite.json",
+		"./package.json": "./package.json"
+	},
+	"publishConfig": {
+		"access": "public",
+		"provenance": true
+	},
+	"scripts": {
+		"check": "bun run --parallel fmt:check lint lockfile:check",
+		"fmt": "oxfmt --write .",
+		"fmt:check": "oxfmt --check .",
+		"lint": "oxlint",
+		"lint:fix": "oxlint --fix",
+		"lockfile:check": "bun install --frozen-lockfile",
+		"prepare": "lefthook install",
+		"publish:packages": "bun scripts/publish.ts",
+		"version:check": "bun scripts/versions.ts check",
+		"version:set": "bun scripts/versions.ts set"
+	},
+	"dependencies": {
+		"@tsconfig/bases": "^1.0.28"
+	},
+	"devDependencies": {
+		"@configg/oxc": "workspace:*",
+		"@configg/tsconfig": "workspace:*",
+		"@types/bun": "^1.4.2",
+		"eslint-plugin-testing-library": "^7.16.2",
+		"lefthook": "^2.1.14",
+		"oxfmt": "^0.68.0",
+		"oxlint": "^1.83.0",
+		"oxlint-tsgolint": "^7.0.2002",
+		"typescript": "7"
+	},
+	"peerDependencies": {
+		"eslint-plugin-testing-library": "^7.16",
+		"oxfmt": ">=0.65.0",
+		"oxlint": "^1",
+		"oxlint-tsgolint": "^7",
+		"typescript": "^7"
+	},
+	"peerDependenciesMeta": {
+		"eslint-plugin-testing-library": {
+			"optional": true
+		},
+		"oxfmt": {
+			"optional": true
+		},
+		"oxlint": {
+			"optional": true
+		},
+		"oxlint-tsgolint": {
+			"optional": true
+		}
+	},
+	"packageManager": "bun@1.4.2"
+}

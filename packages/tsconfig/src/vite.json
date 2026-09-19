@@ -1,0 +1,4 @@
+{
+	"$schema": "https://www.schemastore.org/tsconfig",
+	"extends": ["@tsconfig/bases/strictest", "@tsconfig/bases/vite-react"]
+}

@@ -1,0 +1,57 @@
+{
+	"name": "@configg/oxc",
+	"version": "0.1.0",
+	"description": "oxfmt and oxlint presets",
+	"keywords": [
+		"config",
+		"formatter",
+		"linter",
+		"oxc",
+		"oxfmt",
+		"oxlint"
+	],
+	"homepage": "https://github.com/crutchcrew/configg/tree/main/packages/oxc#readme",
+	"bugs": {
+		"url": "https://github.com/crutchcrew/configg/issues"
+	},
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/crutchcrew/configg.git",
+		"directory": "packages/oxc"
+	},
+	"files": [
+		"src"
+	],
+	"type": "module",
+	"sideEffects": false,
+	"exports": {
+		"./fmt": "./src/fmt.ts",
+		"./lint": "./src/lint.ts",
+		"./package.json": "./package.json"
+	},
+	"publishConfig": {
+		"access": "public",
+		"provenance": true
+	},
+	"peerDependencies": {
+		"eslint-plugin-testing-library": "^7.16",
+		"oxfmt": ">=0.65.0",
+		"oxlint": "^1",
+		"oxlint-tsgolint": "^7"
+	},
+	"peerDependenciesMeta": {
+		"eslint-plugin-testing-library": {
+			"optional": true
+		},
+		"oxfmt": {
+			"optional": true
+		},
+		"oxlint": {
+			"optional": true
+		},
+		"oxlint-tsgolint": {
+			"optional": true
+		}
+	}
+}

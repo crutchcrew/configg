@@ -5,7 +5,7 @@
 [![provenance](https://img.shields.io/badge/provenance-verified-brightgreen)](https://www.npmjs.com/package/@configg/bases)
 [![license](https://img.shields.io/github/license/crutchcrew/configg)](./LICENSE)
 
-Shared configuration presets for code tooling. One package per tool, or all of them in a single install.
+Shared configuration presets for typescript tooling. One package per tool, or all of them in a single install.
 
 The presets ship as TypeScript and JSON source. There is no build step, so use them from a runtime or tool that can load `.ts` files from `node_modules` (Bun, or the tool's own loader).
 

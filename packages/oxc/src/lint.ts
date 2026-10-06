@@ -1,5 +1,19 @@
 import type { OxlintConfig } from 'oxlint'
 
+const sharedRules = {
+	'eslint/max-classes-per-file': ['warn', { max: 2 }],
+	'typescript/restrict-template-expressions': [
+		'error',
+		{
+			allowBoolean: true,
+			allowNever: true,
+			allowNullish: true,
+			allowNumber: true,
+		},
+	],
+	'unicorn/no-array-reduce': 'off',
+} as const satisfies OxlintConfig['rules']
+
 export const configs = {
 	client: {
 		categories: {
@@ -82,6 +96,7 @@ export const configs = {
 		],
 		plugins: ['eslint', 'oxc', 'react', 'typescript', 'unicorn'],
 		rules: {
+			...sharedRules,
 			'func-style': ['error', 'declaration'],
 			'no-magic-numbers': 'off',
 			'no-rest-spread-properties': 'off',
@@ -126,6 +141,7 @@ export const configs = {
 			typeCheck: true,
 		},
 		rules: {
+			...sharedRules,
 			'func-style': ['error', 'declaration'],
 			'no-magic-numbers': 'off',
 			'no-rest-spread-properties': 'off',

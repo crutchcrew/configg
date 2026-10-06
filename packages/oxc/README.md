@@ -40,8 +40,9 @@ export default defineConfig(configs.client)
 - `client`: browser env, type-aware, with rules relaxed for component code. Its `**/*.spec.{ts,tsx}` override enables the Vitest env and Testing Library rules, so it needs `eslint-plugin-testing-library`.
 - `scripts`: Node env, type-aware, for tooling and config files.
 
-Both presets allow up to two classes per file and allow `reduce()`. Template expressions
-allow booleans, numbers, nullish values and `never`; other types follow Oxlint's defaults.
+Both presets allow up to two classes per file, allow `reduce()` and allow `process.exit()` (CLI scripts and
+shutdown handlers exit with a status code on purpose). Template expressions allow booleans, numbers, nullish
+values and `never`; other types follow Oxlint's defaults.
 
 ## Peer dependencies
 

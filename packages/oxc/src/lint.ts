@@ -12,6 +12,7 @@ const sharedRules = {
 		},
 	],
 	'unicorn/no-array-reduce': 'off',
+	'unicorn/no-process-exit': 'off',
 } as const satisfies OxlintConfig['rules']
 
 export const configs = {

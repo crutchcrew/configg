@@ -42,7 +42,8 @@ export default defineConfig(configs.client)
 
 Both presets allow up to two classes per file, allow `reduce()` and allow `process.exit()` (CLI scripts and
 shutdown handlers exit with a status code on purpose). They turn `import/prefer-default-export` off, since named
-exports are the convention; it matters once a config adds the `import` plugin. Template expressions allow
+exports are the convention (it matters once a config adds the `import` plugin), and `unicorn/number-literal-case`
+off, since oxfmt and Prettier write hex digits in lowercase. Template expressions allow
 booleans, numbers, nullish values and `never`; other types follow Oxlint's defaults.
 
 ## Peer dependencies

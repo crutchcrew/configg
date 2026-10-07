@@ -14,6 +14,8 @@ const sharedRules = {
 	'import/prefer-default-export': 'off',
 	'unicorn/no-array-reduce': 'off',
 	'unicorn/no-process-exit': 'off',
+	// Oxfmt and Prettier write hex digits in lowercase; this rule wants uppercase and takes no option.
+	'unicorn/number-literal-case': 'off',
 } as const satisfies OxlintConfig['rules']
 
 export const configs = {

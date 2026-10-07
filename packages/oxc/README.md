@@ -41,8 +41,9 @@ export default defineConfig(configs.client)
 - `scripts`: Node env, type-aware, for tooling and config files.
 
 Both presets allow up to two classes per file, allow `reduce()` and allow `process.exit()` (CLI scripts and
-shutdown handlers exit with a status code on purpose). Template expressions allow booleans, numbers, nullish
-values and `never`; other types follow Oxlint's defaults.
+shutdown handlers exit with a status code on purpose). They turn `import/prefer-default-export` off, since named
+exports are the convention; it matters once a config adds the `import` plugin. Template expressions allow
+booleans, numbers, nullish values and `never`; other types follow Oxlint's defaults.
 
 ## Peer dependencies
 

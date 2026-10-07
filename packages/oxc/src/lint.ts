@@ -11,6 +11,7 @@ const sharedRules = {
 			allowNumber: true,
 		},
 	],
+	'import/prefer-default-export': 'off',
 	'unicorn/no-array-reduce': 'off',
 	'unicorn/no-process-exit': 'off',
 } as const satisfies OxlintConfig['rules']

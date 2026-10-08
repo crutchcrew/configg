@@ -40,9 +40,11 @@ export default defineConfig(configs.client)
 - `client`: browser env, type-aware, with rules relaxed for component code. Its `**/*.spec.{ts,tsx}` override enables the Vitest env and Testing Library rules, so it needs `eslint-plugin-testing-library`.
 - `scripts`: Node env, type-aware, for tooling and config files.
 
-Both presets allow up to two classes per file, allow `reduce()` and allow `process.exit()` (CLI scripts and
-shutdown handlers exit with a status code on purpose). Template expressions allow booleans, numbers, nullish
-values and `never`; other types follow Oxlint's defaults.
+Both presets allow up to two classes per file, allow `reduce()`, allow `process.exit()` (CLI scripts and
+shutdown handlers exit with a status code on purpose) and allow short identifiers (`eslint/id-length` is off). They turn `import/prefer-default-export` off, since named
+exports are the convention (it matters once a config adds the `import` plugin), and `unicorn/number-literal-case`
+off, since oxfmt and Prettier write hex digits in lowercase. Template expressions allow
+booleans, numbers, nullish values and `never`; other types follow Oxlint's defaults.
 
 ## Peer dependencies
 

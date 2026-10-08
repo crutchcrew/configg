@@ -1,6 +1,7 @@
 import type { OxlintConfig } from 'oxlint'
 
 const sharedRules = {
+	'eslint/id-length': 'off',
 	'eslint/max-classes-per-file': ['warn', { max: 2 }],
 	'typescript/restrict-template-expressions': [
 		'error',
@@ -11,8 +12,11 @@ const sharedRules = {
 			allowNumber: true,
 		},
 	],
+	'import/prefer-default-export': 'off',
 	'unicorn/no-array-reduce': 'off',
 	'unicorn/no-process-exit': 'off',
+	// Oxfmt and Prettier write hex digits in lowercase; this rule wants uppercase and takes no option.
+	'unicorn/number-literal-case': 'off',
 } as const satisfies OxlintConfig['rules']
 
 export const configs = {

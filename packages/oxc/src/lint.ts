@@ -1,6 +1,7 @@
 import type { OxlintConfig } from 'oxlint'
 
 const sharedRules = {
+	'eslint/id-length': 'off',
 	'eslint/max-classes-per-file': ['warn', { max: 2 }],
 	'typescript/restrict-template-expressions': [
 		'error',

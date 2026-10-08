@@ -35,7 +35,7 @@
     },
     "packages/oxc": {
       "name": "@configg/oxc",
-      "version": "0.1.6",
+      "version": "0.1.8",
       "dependencies": {
         "@oxlint/plugins": "^1.83.0",
       },
@@ -54,7 +54,7 @@
     },
     "packages/tsconfig": {
       "name": "@configg/tsconfig",
-      "version": "0.1.6",
+      "version": "0.1.8",
       "dependencies": {
         "@tsconfig/bases": "^1.0.28",
       },

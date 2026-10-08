@@ -42,10 +42,11 @@ export default defineConfig(configs.client)
 
 Both presets allow up to two classes per file, allow `reduce()`, allow `process.exit()` (CLI scripts and
 shutdown handlers exit with a status code on purpose) and allow short identifiers (`eslint/id-length` is off). They turn `import/prefer-default-export` off, since named
-exports are the convention (it matters once a config adds the `import` plugin), and `unicorn/number-literal-case`
-off, since oxfmt and Prettier write hex digits in lowercase. Template expressions allow
+exports are the convention (it matters once a config adds the `import` plugin), and require lowercase hex digits (`0xfeff`), as oxfmt and Prettier write them: oxlint's
+`unicorn/number-literal-case` wants uppercase and takes no options, so the presets run the original rule from
+`eslint-plugin-unicorn` as `unicorn-js/number-literal-case`. Template expressions allow
 booleans, numbers, nullish values and `never`; other types follow Oxlint's defaults.
 
 ## Peer dependencies
 
-`oxfmt`, `oxlint`, `oxlint-tsgolint` and `eslint-plugin-testing-library` are all optional peers, so you install only the ones the presets you use need.
+`oxfmt`, `oxlint`, `oxlint-tsgolint`, `eslint-plugin-testing-library` and `eslint-plugin-unicorn` are all optional peers, so you install only the ones the presets you use need.

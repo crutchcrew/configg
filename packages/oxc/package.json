@@ -36,12 +36,16 @@
 	},
 	"peerDependencies": {
 		"eslint-plugin-testing-library": "^7.16",
+		"eslint-plugin-unicorn": "^77",
 		"oxfmt": ">=0.65.0",
 		"oxlint": "^1.12.0",
 		"oxlint-tsgolint": "^7"
 	},
 	"peerDependenciesMeta": {
 		"eslint-plugin-testing-library": {
+			"optional": true
+		},
+		"eslint-plugin-unicorn": {
 			"optional": true
 		},
 		"oxfmt": {

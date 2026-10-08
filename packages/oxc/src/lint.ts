@@ -3,6 +3,8 @@ import type { OxlintConfig } from 'oxlint'
 const sharedRules = {
 	'eslint/id-length': 'off',
 	'eslint/max-classes-per-file': ['warn', { max: 2 }],
+	'eslint/max-lines-per-function': ['warn', { max: 100, skipBlankLines: true, skipComments: true }],
+	'eslint/max-statements': ['warn', { max: 30 }],
 	'typescript/restrict-template-expressions': [
 		'error',
 		{
@@ -13,6 +15,7 @@ const sharedRules = {
 		},
 	],
 	'import/prefer-default-export': 'off',
+	'oxc/no-async-await': 'off',
 	'unicorn/no-array-reduce': 'off',
 	'unicorn/no-process-exit': 'off',
 	// Oxfmt and Prettier write hex digits in lowercase; this rule wants uppercase and takes no option.

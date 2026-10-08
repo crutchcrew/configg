@@ -1,6 +1,6 @@
 {
 	"name": "@configg/bases",
-	"version": "0.1.5",
+	"version": "0.1.6",
 	"description": "All @configg presets in one package: oxc and tsconfig",
 	"keywords": [
 		"config",
@@ -51,6 +51,7 @@
 		"version:set": "bun scripts/versions.ts set"
 	},
 	"dependencies": {
+		"@oxlint/plugins": "^1.83.0",
 		"@tsconfig/bases": "^1.0.28"
 	},
 	"devDependencies": {

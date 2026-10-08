@@ -1,6 +1,6 @@
 {
 	"name": "@configg/oxc",
-	"version": "0.1.5",
+	"version": "0.1.6",
 	"description": "oxfmt and oxlint presets",
 	"keywords": [
 		"config",
@@ -33,6 +33,9 @@
 	"publishConfig": {
 		"access": "public",
 		"provenance": true
+	},
+	"dependencies": {
+		"@oxlint/plugins": "^1.83.0"
 	},
 	"peerDependencies": {
 		"eslint-plugin-testing-library": "^7.16",

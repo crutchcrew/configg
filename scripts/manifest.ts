@@ -15,7 +15,7 @@ export interface Workspace {
 }
 
 export async function readManifest(path: string): Promise<Manifest> {
-	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- our own package.json files
+	// oxlint-disable-next-line anti-slop/require-safety-comment-for-type-assertion, typescript/no-unsafe-type-assertion -- our own package.json files
 	return (await Bun.file(path).json()) as Manifest
 }
 
@@ -29,11 +29,14 @@ export async function workspaces(): Promise<Workspace[]> {
 		ROOT,
 		...readdirSync(join(ROOT, 'packages')).map((dir) => join(ROOT, 'packages', dir)),
 	]
+
 	const all = await Promise.all(
 		cwds.map(async (cwd) => {
 			const path = join(cwd, 'package.json')
+
 			return { cwd, manifest: await readManifest(path), path }
 		}),
 	)
+
 	return all
 }

@@ -4,6 +4,7 @@ import { configs } from '@configg/oxc/lint'
 export default defineConfig({
 	...configs.scripts,
 	globals: { Bun: 'readonly' },
+	ignorePatterns: ['packages/oxc/src/anti-slop/**'],
 	overrides: [
 		{
 			files: ['scripts/**'],

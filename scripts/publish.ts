@@ -15,7 +15,9 @@ async function isPublished(name: string, version: string): Promise<boolean> {
 		stderr: 'ignore',
 		stdout: 'pipe',
 	})
+
 	const output = await new Response(proc.stdout).text()
+
 	return (await proc.exited) === 0 && output.trim() === version
 }
 

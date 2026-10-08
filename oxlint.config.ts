@@ -13,7 +13,6 @@ export default defineConfig({
 				'eslint/max-statements': 'off',
 				'eslint/no-await-in-loop': 'off',
 				'eslint/no-console': 'off',
-				'eslint/no-continue': 'off',
 				'eslint/no-ternary': 'off',
 				'eslint/no-undefined': 'off',
 				'oxc/no-optional-chaining': 'off',

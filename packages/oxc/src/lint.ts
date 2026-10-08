@@ -7,6 +7,7 @@ const sharedRules = {
 	'eslint/max-classes-per-file': ['warn', { max: 2 }],
 	'eslint/max-lines-per-function': ['warn', { max: 100, skipBlankLines: true, skipComments: true }],
 	'eslint/max-statements': ['warn', { max: 30 }],
+	'eslint/no-continue': 'off',
 	'import/prefer-default-export': 'off',
 	'oxc/no-async-await': 'off',
 	'typescript/restrict-template-expressions': [

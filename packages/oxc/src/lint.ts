@@ -15,13 +15,9 @@ const sharedRules = {
 	'import/prefer-default-export': 'off',
 	'unicorn/no-array-reduce': 'off',
 	'unicorn/no-process-exit': 'off',
-	// Oxlint's port wants uppercase hex digits and takes no options, but oxfmt and Prettier write them in lowercase.
-	// The original rule from eslint-plugin-unicorn runs instead, set to lowercase.
+	// Oxfmt and Prettier write hex digits in lowercase; this rule wants uppercase and takes no option.
 	'unicorn/number-literal-case': 'off',
-	'unicorn-js/number-literal-case': ['warn', { hexadecimalValue: 'lowercase' }],
 } as const satisfies OxlintConfig['rules']
-
-const unicornJs = { name: 'unicorn-js', specifier: 'eslint-plugin-unicorn' } as const
 
 export const configs = {
 	client: {
@@ -38,7 +34,6 @@ export const configs = {
 			browser: true,
 			builtin: true,
 		},
-		jsPlugins: [unicornJs],
 		options: {
 			typeAware: true,
 			typeCheck: true,
@@ -146,7 +141,6 @@ export const configs = {
 			builtin: true,
 			node: true,
 		},
-		jsPlugins: [unicornJs],
 		options: {
 			typeAware: true,
 			typeCheck: true,

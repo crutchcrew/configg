@@ -1,10 +1,11 @@
 import { defineConfig } from 'oxlint'
-import { configs } from '@configg/oxc/lint'
+import { antiSlop, configs } from '@configg/oxc/lint'
 
 export default defineConfig({
 	...configs.scripts,
 	globals: { Bun: 'readonly' },
 	ignorePatterns: ['packages/oxc/src/anti-slop/**'],
+	jsPlugins: [...antiSlop.jsPlugins],
 	overrides: [
 		{
 			files: ['scripts/**'],
@@ -22,4 +23,5 @@ export default defineConfig({
 			},
 		},
 	],
+	rules: { ...configs.scripts.rules, ...antiSlop.rules },
 })

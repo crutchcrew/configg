@@ -62,10 +62,19 @@ Installing a single package works the same way, for example `@configg/oxc/fmt` a
 - `oxlint` exports `configs`: `client` (browser env, React, and a `**/*.spec.{ts,tsx}` override with Vitest and Testing Library rules) and `scripts` (Node env).
 - `tsconfig/bun` (`strictest` + Bun), `tsconfig/vite` (`strictest` + Vite/React) and `tsconfig/client` (`vite` with ambient `types` cleared, so a package only picks up the `@types/*` it asks for).
 
-Both Oxlint presets include all 18 rules from the vendored [anti-slop](https://github.com/dmmulroy/anti-slop) plugin.
-See [UPSTREAM.md](./packages/oxc/src/anti-slop/UPSTREAM.md) for its source and update policy.
-`unicorn/prefer-reflect-apply` is off because anti-slop forbids `Reflect.apply`.
-The plugin ships as TypeScript, so run oxlint under Bun (`bunx --bun oxlint`): Node refuses to strip types from files in `node_modules`.
+The Oxlint presets don't enable anti-slop. `antiSlop` from the oxlint entry is an opt-in set with the plugin and all 18 rules as errors; `unicorn/prefer-reflect-apply` is off. See [UPSTREAM.md](./packages/oxc/src/anti-slop/UPSTREAM.md) for its source and update policy.
+
+```ts
+import { antiSlop, configs } from '@configg/bases/oxlint'
+
+export default defineConfig({
+	...configs.client,
+	jsPlugins: [...antiSlop.jsPlugins],
+	rules: { ...configs.client.rules, ...antiSlop.rules },
+})
+```
+
+If your config has its own `jsPlugins`, keep the anti-slop entry in that array. The plugin ships as TypeScript, so run oxlint under Bun (`bunx --bun oxlint`): Node refuses to strip types from files in `node_modules`.
 
 `eslint-plugin-testing-library` is only needed for `configs.client` in the oxlint preset.
 

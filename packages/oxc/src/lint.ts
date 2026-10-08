@@ -1,26 +1,8 @@
 import type { OxlintConfig } from 'oxlint'
 
-const antiSlop = { name: 'anti-slop', specifier: `${import.meta.dirname}/anti-slop/index.ts` }
+const antiSlopPlugin = { name: 'anti-slop', specifier: `${import.meta.dirname}/anti-slop/index.ts` }
 
 const sharedRules = {
-	'anti-slop/no-array-filter-map': 'error',
-	'anti-slop/no-chained-type-assertions': 'error',
-	'anti-slop/no-conditional-empty-object-spread': 'error',
-	'anti-slop/no-known-value-widening': 'error',
-	'anti-slop/no-module-mocking': 'error',
-	'anti-slop/no-object-parameters': 'error',
-	'anti-slop/no-reduce-accumulator-copy': 'error',
-	'anti-slop/no-reflect-apply': 'error',
-	'anti-slop/no-reflect-get': 'error',
-	'anti-slop/no-runtime-typeof': 'error',
-	'anti-slop/no-shape-in-symbol-names': 'error',
-	'anti-slop/no-unknown-parameters': 'error',
-	'anti-slop/no-unknown-returns': 'error',
-	'anti-slop/no-unknown-type-aliases': 'error',
-	'anti-slop/no-unsafe-dictionary-type': 'error',
-	'anti-slop/no-widen-then-assert': 'error',
-	'anti-slop/require-readable-spacing': 'error',
-	'anti-slop/require-safety-comment-for-type-assertion': 'error',
 	'eslint/id-length': 'off',
 	'eslint/max-classes-per-file': ['warn', { max: 2 }],
 	'eslint/max-lines-per-function': ['warn', { max: 100, skipBlankLines: true, skipComments: true }],
@@ -40,9 +22,34 @@ const sharedRules = {
 	'unicorn/no-process-exit': 'off',
 	// Oxfmt and Prettier write hex digits in lowercase; this rule wants uppercase and takes no option.
 	'unicorn/number-literal-case': 'off',
-	// This pushes toward Reflect.apply, which anti-slop/no-reflect-apply forbids.
-	'unicorn/prefer-reflect-apply': 'off',
 } as const satisfies OxlintConfig['rules']
+
+/** Opt in by spreading into a preset. The plugin ships as TypeScript, so run oxlint under Bun. */
+export const antiSlop = {
+	jsPlugins: [antiSlopPlugin],
+	rules: {
+		'anti-slop/no-array-filter-map': 'error',
+		'anti-slop/no-chained-type-assertions': 'error',
+		'anti-slop/no-conditional-empty-object-spread': 'error',
+		'anti-slop/no-known-value-widening': 'error',
+		'anti-slop/no-module-mocking': 'error',
+		'anti-slop/no-object-parameters': 'error',
+		'anti-slop/no-reduce-accumulator-copy': 'error',
+		'anti-slop/no-reflect-apply': 'error',
+		'anti-slop/no-reflect-get': 'error',
+		'anti-slop/no-runtime-typeof': 'error',
+		'anti-slop/no-shape-in-symbol-names': 'error',
+		'anti-slop/no-unknown-parameters': 'error',
+		'anti-slop/no-unknown-returns': 'error',
+		'anti-slop/no-unknown-type-aliases': 'error',
+		'anti-slop/no-unsafe-dictionary-type': 'error',
+		'anti-slop/no-widen-then-assert': 'error',
+		'anti-slop/require-readable-spacing': 'error',
+		'anti-slop/require-safety-comment-for-type-assertion': 'error',
+		// This pushes toward Reflect.apply, which anti-slop/no-reflect-apply forbids.
+		'unicorn/prefer-reflect-apply': 'off',
+	},
+} as const satisfies OxlintConfig
 
 export const configs = {
 	client: {
@@ -59,7 +66,6 @@ export const configs = {
 			browser: true,
 			builtin: true,
 		},
-		jsPlugins: [antiSlop],
 		options: {
 			typeAware: true,
 			typeCheck: true,
@@ -167,7 +173,6 @@ export const configs = {
 			builtin: true,
 			node: true,
 		},
-		jsPlugins: [antiSlop],
 		options: {
 			typeAware: true,
 			typeCheck: true,

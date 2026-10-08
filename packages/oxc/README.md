@@ -40,10 +40,19 @@ export default defineConfig(configs.client)
 - `client`: browser env, type-aware, with rules relaxed for component code. Its `**/*.spec.{ts,tsx}` override enables the Vitest env and Testing Library rules, so it needs `eslint-plugin-testing-library`.
 - `scripts`: Node env, type-aware, for tooling and config files.
 
-Both Oxlint presets include all 18 rules from the vendored [anti-slop](https://github.com/dmmulroy/anti-slop) plugin.
-See [UPSTREAM.md](./src/anti-slop/UPSTREAM.md) for its source and update policy.
-`unicorn/prefer-reflect-apply` is off because anti-slop forbids `Reflect.apply`.
-The plugin ships as TypeScript, so run oxlint under Bun (`bunx --bun oxlint`): Node refuses to strip types from files in `node_modules`.
+The Oxlint presets don't enable anti-slop. `antiSlop` from `@configg/oxc/lint` is an opt-in set with the plugin and all 18 rules as errors; `unicorn/prefer-reflect-apply` is off. See [UPSTREAM.md](./src/anti-slop/UPSTREAM.md) for its source and update policy.
+
+```ts
+import { antiSlop, configs } from '@configg/oxc/lint'
+
+export default defineConfig({
+	...configs.client,
+	jsPlugins: [...antiSlop.jsPlugins],
+	rules: { ...configs.client.rules, ...antiSlop.rules },
+})
+```
+
+If your config has its own `jsPlugins`, keep the anti-slop entry in that array. The plugin ships as TypeScript, so run oxlint under Bun (`bunx --bun oxlint`): Node refuses to strip types from files in `node_modules`.
 
 Both presets allow up to two classes per file, allow `reduce()`, allow `process.exit()` (CLI scripts and
 shutdown handlers exit with a status code on purpose) and allow short identifiers (`eslint/id-length` is off). They turn `import/prefer-default-export` off, since named

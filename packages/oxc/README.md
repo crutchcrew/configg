@@ -43,8 +43,9 @@ export default defineConfig(configs.client)
 Both presets allow up to two classes per file, allow `reduce()`, allow `process.exit()` (CLI scripts and
 shutdown handlers exit with a status code on purpose) and allow short identifiers (`eslint/id-length` is off). They turn `import/prefer-default-export` off, since named
 exports are the convention (it matters once a config adds the `import` plugin), and `unicorn/number-literal-case`
-off, since oxfmt and Prettier write hex digits in lowercase. Template expressions allow
-booleans, numbers, nullish values and `never`; other types follow Oxlint's defaults.
+off, since oxfmt and Prettier write hex digits in lowercase. `async`/`await` is allowed (`oxc/no-async-await` is
+off), and functions may run to 100 lines (blank lines and comments not counted) and 30 statements. Template expressions
+allow booleans, numbers, nullish values and `never`; other types follow Oxlint's defaults.
 
 ## Peer dependencies
 

@@ -19,6 +19,7 @@ const sharedRules = {
 			allowNumber: true,
 		},
 	],
+	'unicorn/no-array-for-each': 'off',
 	'unicorn/no-array-reduce': 'off',
 	'unicorn/no-process-exit': 'off',
 	// Oxfmt and Prettier write hex digits in lowercase; this rule wants uppercase and takes no option.

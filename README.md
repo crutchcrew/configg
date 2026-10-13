@@ -14,6 +14,7 @@ The presets ship as TypeScript and JSON source. There is no build step, so use t
 | Package                                    | Version                                                                                                   | What it configures                                          |
 | ------------------------------------------ | --------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
 | [`@configg/oxc`](./packages/oxc)           | [![npm](https://img.shields.io/npm/v/@configg/oxc)](https://www.npmjs.com/package/@configg/oxc)           | `oxfmt` (`/fmt`) and `oxlint` (`/lint`) presets             |
+| [`@configg/prettier`](./packages/prettier) | [![npm](https://img.shields.io/npm/v/@configg/prettier)](https://www.npmjs.com/package/@configg/prettier) | Prettier presets and plugin configs to compose              |
 | [`@configg/tsconfig`](./packages/tsconfig) | [![npm](https://img.shields.io/npm/v/@configg/tsconfig)](https://www.npmjs.com/package/@configg/tsconfig) | Strictest `tsconfig` presets for Bun and Vite               |
 | `@configg/bases` (this repo's root)        | [![npm](https://img.shields.io/npm/v/@configg/bases)](https://www.npmjs.com/package/@configg/bases)       | All of the above under one name, straight from `packages/*` |
 
@@ -23,6 +24,7 @@ Install only what you use, or install `@configg/bases` and import everything fro
 | ---------------------------- | ------------------------------------- |
 | `oxfmt`                      | `@configg/oxc/fmt`                    |
 | `oxlint`                     | `@configg/oxc/lint`                   |
+| `prettier`                   | `@configg/prettier`                   |
 | `tsconfig/{bun,client,vite}` | `@configg/tsconfig/{bun,client,vite}` |
 
 ## Usage
@@ -60,6 +62,7 @@ Installing a single package works the same way, for example `@configg/oxc/fmt` a
 
 - `oxfmt` exports `configs`: `client` (Tailwind class sorting, import grouping), `scripts` (shared base for tooling and config files) and `server` (shared base).
 - `oxlint` exports `configs`: `client` (browser env, React, and a `**/*.spec.{ts,tsx}` override with Vitest and Testing Library rules) and `scripts` (Node env).
+- `prettier` exports `configs` (`client`, `scripts`, `server`, the same options as oxfmt) and one config per plugin (`sortImports`, `astro`, `svelte`, `tailwind`) for you to compose. See [its README](./packages/prettier/README.md).
 - `tsconfig/bun` (`strictest` + Bun), `tsconfig/vite` (`strictest` + Vite/React) and `tsconfig/client` (`vite` with ambient `types` cleared, so a package only picks up the `@types/*` it asks for).
 
 The Oxlint presets don't enable anti-slop. `antiSlop` from the oxlint entry is an opt-in set with the plugin and all 18 rules as errors; `unicorn/prefer-reflect-apply` is off. See [UPSTREAM.md](./packages/oxc/src/anti-slop/UPSTREAM.md) for its source and update policy.

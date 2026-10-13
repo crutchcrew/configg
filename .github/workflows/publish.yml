@@ -36,7 +36,7 @@ jobs:
           node-version: lts/*
           registry-url: https://registry.npmjs.org
 
-      # Publishes @configg/bases (repo root), oxc and tsconfig.
+      # Publishes @configg/bases (repo root), oxc, prettier and tsconfig.
       # Versions already on npm are skipped, so re-running is safe.
       - name: Publish to npm
         run: bun scripts/publish.ts

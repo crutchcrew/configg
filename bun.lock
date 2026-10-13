@@ -10,6 +10,7 @@
       },
       "devDependencies": {
         "@configg/oxc": "workspace:*",
+        "@configg/prettier": "workspace:*",
         "@configg/tsconfig": "workspace:*",
         "@types/bun": "^1.4.2",
         "eslint-plugin-testing-library": "^7.16.2",
@@ -20,17 +21,27 @@
         "typescript": "7",
       },
       "peerDependencies": {
+        "@ianvs/prettier-plugin-sort-imports": "^4",
         "eslint-plugin-testing-library": "^7.16",
         "oxfmt": ">=0.65.0",
         "oxlint": "^1.12.0",
         "oxlint-tsgolint": "^7",
+        "prettier": "^3.9.9",
+        "prettier-plugin-astro": ">=0.14",
+        "prettier-plugin-svelte": "^3",
+        "prettier-plugin-tailwindcss": ">=0.6",
         "typescript": "^7",
       },
       "optionalPeers": [
+        "@ianvs/prettier-plugin-sort-imports",
         "eslint-plugin-testing-library",
         "oxfmt",
         "oxlint",
         "oxlint-tsgolint",
+        "prettier",
+        "prettier-plugin-astro",
+        "prettier-plugin-svelte",
+        "prettier-plugin-tailwindcss",
       ],
     },
     "packages/oxc": {
@@ -52,6 +63,23 @@
         "oxlint-tsgolint",
       ],
     },
+    "packages/prettier": {
+      "name": "@configg/prettier",
+      "version": "0.1.8",
+      "peerDependencies": {
+        "@ianvs/prettier-plugin-sort-imports": "^4",
+        "prettier": "^3",
+        "prettier-plugin-astro": ">=0.14",
+        "prettier-plugin-svelte": "^3",
+        "prettier-plugin-tailwindcss": ">=0.6",
+      },
+      "optionalPeers": [
+        "@ianvs/prettier-plugin-sort-imports",
+        "prettier-plugin-astro",
+        "prettier-plugin-svelte",
+        "prettier-plugin-tailwindcss",
+      ],
+    },
     "packages/tsconfig": {
       "name": "@configg/tsconfig",
       "version": "0.1.8",
@@ -69,6 +97,8 @@
     "@cacheable/utils": ["@cacheable/utils@2.5.0", "", { "dependencies": { "hashery": "^1.5.1", "keyv": "^5.6.0" } }, "sha512-buipgOVDkkPXNR5+xBpDw7Zk2n1EvU7qBJCNUcL7rhQ//kfpOXPAvQ511Os0vpLYJ1pZnvudNytkQt2hst3wqA=="],
 
     "@configg/oxc": ["@configg/oxc@workspace:packages/oxc"],
+
+    "@configg/prettier": ["@configg/prettier@workspace:packages/prettier"],
 
     "@configg/tsconfig": ["@configg/tsconfig@workspace:packages/tsconfig"],
 
@@ -385,6 +415,8 @@
     "picomatch": ["picomatch@4.0.7", "", {}, "sha512-qcJu88Q2IWqJsDD529JKMdwGm/dvInW4HvQnRwiH9JtihJvzGOscDtHE3x1pBKeUOTysQ8kVmLnJ2kJu7yhcGA=="],
 
     "prelude-ls": ["prelude-ls@1.2.1", "", {}, "sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g=="],
+
+    "prettier": ["prettier@3.9.10", "", { "bin": { "prettier": "bin/prettier.cjs" } }, "sha512-skGHTH1Yb9QvaTC4hWnRTzEYtCpApF0UMBPz+t/0ZPzP8ihefo/btKd+QA7pUE0fEwA1SbS/NmhyEcstdXOIdA=="],
 
     "punycode": ["punycode@2.3.1", "", {}, "sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg=="],
 

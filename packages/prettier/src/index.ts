@@ -1,12 +1,50 @@
 import type { Config } from 'prettier'
 
-const base = {
+/** A config for `combine()`. Call it with overrides to get a preset with them merged in. */
+export interface Preset {
+	(overrides: Config): Preset
+	readonly config: Config
+}
+
+function isList(value: unknown): value is readonly unknown[] {
+	return Array.isArray(value)
+}
+
+/* Arrays concatenate, so `plugins` and `overrides` accumulate; any other value is replaced. */
+function merge(target: Config, source: Config): Config {
+	const merged: Config = { ...target }
+
+	for (const [key, value] of Object.entries(source)) {
+		const current = merged[key]
+
+		merged[key] = value
+
+		if (isList(current) && isList(value)) {
+			merged[key] = [...current, ...value]
+		}
+	}
+
+	return merged
+}
+
+function preset(config: Config): Preset {
+	return Object.assign((overrides: Config) => preset(merge(config, overrides)), { config })
+}
+
+/** Merges presets in order. Pass `tailwind` last: it wraps the parsers of the plugins before it. */
+export function combine(...presets: Preset[]): Config {
+	return presets.reduce<Config>((merged, { config }) => merge(merged, config), {})
+}
+
+export const config = preset({
 	arrowParens: 'always',
 	bracketSameLine: false,
 	bracketSpacing: true,
 	embeddedLanguageFormatting: 'auto',
 	endOfLine: 'lf',
 	experimentalOperatorPosition: 'end',
+	htmlWhitespaceSensitivity: 'css',
+	jsxSingleQuote: false,
 	objectWrap: 'preserve',
 	printWidth: 100,
 	proseWrap: 'preserve',
@@ -17,49 +55,25 @@ const base = {
 	tabWidth: 2,
 	trailingComma: 'all',
 	useTabs: true,
-} satisfies Config
+})
 
-export const configs = {
-	client: {
-		...base,
-		htmlWhitespaceSensitivity: 'css',
-		jsxSingleQuote: false,
-	},
-	scripts: base,
-	server: base,
-} satisfies Record<string, Config>
-
-export const sortImports = {
+export const sortImports = preset({
 	plugins: ['@ianvs/prettier-plugin-sort-imports'],
-	importOrder: [
-		'^react$',
-		'^react/(.*)$',
-		'^react-(.*)$',
-		'',
-		'<BUILTIN_MODULES>',
-		'<THIRD_PARTY_MODULES>',
-		'',
-		'(^|[/#])components(/|$)',
-		'',
-		'(^|[/#])utils(/|$)',
-		'',
-		'^[.]',
-	],
-} satisfies Config
+	importOrder: ['<BUILTIN_MODULES>', '<THIRD_PARTY_MODULES>', '', '^#/(.*)$', '', '^[.]'],
+})
 
-export const astro = {
+export const astro = preset({
 	plugins: ['prettier-plugin-astro'],
 	overrides: [{ files: '*.astro', options: { parser: 'astro' } }],
-} satisfies Config
+})
 
-export const svelte = {
+export const svelte = preset({
 	plugins: ['prettier-plugin-svelte'],
 	overrides: [{ files: '*.svelte', options: { parser: 'svelte' } }],
-} satisfies Config
+})
 
-/* It wraps the parsers of the plugins listed before it, so it goes last in `plugins`. */
-export const tailwind = {
+export const tailwind = preset({
 	plugins: ['prettier-plugin-tailwindcss'],
 	tailwindAttributes: ['class', 'className'],
-	tailwindFunctions: ['cx', 'createVariants'],
-} satisfies Config
+	tailwindFunctions: ['cn', 'cx', 'clsx', 'cva', 'cvx', 'createVariants'],
+})

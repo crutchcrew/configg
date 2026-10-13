@@ -1,0 +1,54 @@
+{
+	"name": "@configg/prettier",
+	"version": "0.1.9",
+	"description": "Prettier presets",
+	"keywords": [
+		"config",
+		"formatter",
+		"prettier"
+	],
+	"homepage": "https://github.com/crutchcrew/configg/tree/main/packages/prettier#readme",
+	"bugs": {
+		"url": "https://github.com/crutchcrew/configg/issues"
+	},
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/crutchcrew/configg.git",
+		"directory": "packages/prettier"
+	},
+	"files": [
+		"src"
+	],
+	"type": "module",
+	"sideEffects": false,
+	"exports": {
+		".": "./src/index.ts",
+		"./package.json": "./package.json"
+	},
+	"publishConfig": {
+		"access": "public",
+		"provenance": true
+	},
+	"peerDependencies": {
+		"@ianvs/prettier-plugin-sort-imports": "^4",
+		"prettier": "^3.5.0",
+		"prettier-plugin-astro": ">=0.14",
+		"prettier-plugin-svelte": "^3",
+		"prettier-plugin-tailwindcss": ">=0.6"
+	},
+	"peerDependenciesMeta": {
+		"@ianvs/prettier-plugin-sort-imports": {
+			"optional": true
+		},
+		"prettier-plugin-astro": {
+			"optional": true
+		},
+		"prettier-plugin-svelte": {
+			"optional": true
+		},
+		"prettier-plugin-tailwindcss": {
+			"optional": true
+		}
+	}
+}

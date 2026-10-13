@@ -1,12 +1,13 @@
 {
 	"name": "@configg/bases",
-	"version": "0.1.8",
-	"description": "All @configg presets in one package: oxc and tsconfig",
+	"version": "0.1.9",
+	"description": "All @configg presets in one package: oxc, prettier and tsconfig",
 	"keywords": [
 		"config",
 		"oxc",
 		"oxfmt",
 		"oxlint",
+		"prettier",
 		"tsconfig"
 	],
 	"homepage": "https://github.com/crutchcrew/configg#readme",
@@ -29,6 +30,7 @@
 	"exports": {
 		"./oxfmt": "./packages/oxc/src/fmt.ts",
 		"./oxlint": "./packages/oxc/src/lint.ts",
+		"./prettier": "./packages/prettier/src/index.ts",
 		"./tsconfig/bun": "./packages/tsconfig/src/bun.json",
 		"./tsconfig/client": "./packages/tsconfig/src/client.json",
 		"./tsconfig/vite": "./packages/tsconfig/src/vite.json",
@@ -66,10 +68,15 @@
 		"typescript": "7"
 	},
 	"peerDependencies": {
+		"@ianvs/prettier-plugin-sort-imports": "^4",
 		"eslint-plugin-testing-library": "^7.16",
 		"oxfmt": ">=0.65.0",
 		"oxlint": "^1.12.0",
 		"oxlint-tsgolint": "^7",
+		"prettier": "^3.5.0",
+		"prettier-plugin-astro": ">=0.14",
+		"prettier-plugin-svelte": "^3",
+		"prettier-plugin-tailwindcss": ">=0.6",
 		"typescript": "^7"
 	},
 	"peerDependenciesMeta": {
@@ -83,6 +90,21 @@
 			"optional": true
 		},
 		"oxlint-tsgolint": {
+			"optional": true
+		},
+		"prettier": {
+			"optional": true
+		},
+		"@ianvs/prettier-plugin-sort-imports": {
+			"optional": true
+		},
+		"prettier-plugin-astro": {
+			"optional": true
+		},
+		"prettier-plugin-svelte": {
+			"optional": true
+		},
+		"prettier-plugin-tailwindcss": {
 			"optional": true
 		}
 	},

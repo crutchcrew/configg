@@ -54,7 +54,7 @@ export default defineConfig({
 
 If your config has its own `jsPlugins`, keep the anti-slop entry in that array. The plugin ships as TypeScript, so run oxlint under Bun (`bunx --bun oxlint`): Node refuses to strip types from files in `node_modules`.
 
-Both presets allow up to two classes per file, allow `reduce()`, allow `process.exit()` (CLI scripts and
+Both presets allow up to two classes per file, allow `forEach()` and `reduce()`, allow `process.exit()` (CLI scripts and
 shutdown handlers exit with a status code on purpose) and allow short identifiers (`eslint/id-length` is off). They turn `import/prefer-default-export` off, since named
 exports are the convention (it matters once a config adds the `import` plugin), and `unicorn/number-literal-case`
 off, since oxfmt and Prettier write hex digits in lowercase. `async`/`await` is allowed (`oxc/no-async-await` is

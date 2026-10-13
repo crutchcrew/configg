@@ -45,7 +45,7 @@
     },
     "packages/oxc": {
       "name": "@configg/oxc",
-      "version": "0.1.9",
+      "version": "0.1.10",
       "dependencies": {
         "@oxlint/plugins": "^1.83.0",
       },
@@ -64,7 +64,7 @@
     },
     "packages/prettier": {
       "name": "@configg/prettier",
-      "version": "0.1.9",
+      "version": "0.1.10",
       "peerDependencies": {
         "@ianvs/prettier-plugin-sort-imports": "^4",
         "prettier": "^3.5.0",
@@ -81,7 +81,7 @@
     },
     "packages/tsconfig": {
       "name": "@configg/tsconfig",
-      "version": "0.1.9",
+      "version": "0.1.10",
       "dependencies": {
         "@tsconfig/bases": "^1.0.28",
       },

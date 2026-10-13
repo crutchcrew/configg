@@ -6,7 +6,7 @@ export interface Preset {
 	readonly config: Config
 }
 
-function isList(value: unknown): value is readonly unknown[] {
+function isList<T>(value: T | readonly T[]): value is readonly T[] {
 	return Array.isArray(value)
 }
 

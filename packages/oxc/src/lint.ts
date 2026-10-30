@@ -8,8 +8,11 @@ const sharedRules = {
 	'eslint/max-lines-per-function': ['warn', { max: 100, skipBlankLines: true, skipComments: true }],
 	'eslint/max-statements': ['warn', { max: 30 }],
 	'eslint/no-continue': 'off',
+	// Both require-await rules: typescript/promise-function-async makes promise-returning functions async without an await.
+	'eslint/require-await': 'off',
 	'import/prefer-default-export': 'off',
 	'oxc/no-async-await': 'off',
+	'typescript/require-await': 'off',
 	'typescript/restrict-template-expressions': [
 		'error',
 		{
@@ -19,6 +22,7 @@ const sharedRules = {
 			allowNumber: true,
 		},
 	],
+	'unicorn/import-style': 'off',
 	'unicorn/no-array-for-each': 'off',
 	'unicorn/no-array-reduce': 'off',
 	'unicorn/no-process-exit': 'off',

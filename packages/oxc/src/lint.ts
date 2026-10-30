@@ -19,6 +19,7 @@ const sharedRules = {
 			allowNumber: true,
 		},
 	],
+	'unicorn/import-style': 'off',
 	'unicorn/no-array-for-each': 'off',
 	'unicorn/no-array-reduce': 'off',
 	'unicorn/no-process-exit': 'off',

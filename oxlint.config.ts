@@ -16,7 +16,6 @@ export default defineConfig({
 				'eslint/no-ternary': 'off',
 				'eslint/no-undefined': 'off',
 				'oxc/no-optional-chaining': 'off',
-				'unicorn/import-style': 'off',
 				'unicorn/no-await-expression-member': 'off',
 				'unicorn/no-null': 'off',
 			},

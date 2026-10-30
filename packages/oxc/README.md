@@ -59,7 +59,8 @@ shutdown handlers exit with a status code on purpose) and allow short identifier
 exports are the convention (it matters once a config adds the `import` plugin), `unicorn/import-style` off, since named
 imports such as `import { join } from 'node:path'` are the convention, and `unicorn/number-literal-case`
 off, since oxfmt and Prettier write hex digits in lowercase. `async`/`await` is allowed (`oxc/no-async-await` is
-off), `continue` is allowed (`eslint/no-continue` is off), and functions may run to 100 lines (blank lines and comments
+off), an `async` function needs no `await` (`eslint/require-await` and `typescript/require-await` are off, since
+`typescript/promise-function-async` makes every promise-returning function `async`), `continue` is allowed (`eslint/no-continue` is off), and functions may run to 100 lines (blank lines and comments
 not counted) and 30 statements. Template expressions
 allow booleans, numbers, nullish values and `never`; other types follow Oxlint's defaults.
 

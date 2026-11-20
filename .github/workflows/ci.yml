@@ -17,6 +17,11 @@ jobs:
 
       - uses: oven-sh/setup-bun@v2
 
+      # Vite+ (`vp`) runs on Node.js ^22.18 || ^24.11.
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
       - run: bun install
 
       - name: Lockfile drift
@@ -25,11 +30,8 @@ jobs:
       - name: Versions in sync
         run: bun run version:check
 
-      - name: Format
-        run: bun run fmt:check
-
-      - name: Lint
-        run: bun run lint
+      - name: Format, lint and type check
+        run: bunx vp check
 
       - name: Pack (dry run)
         run: bun run publish:packages --dry-run

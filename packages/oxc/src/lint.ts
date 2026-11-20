@@ -161,7 +161,7 @@ export const configs = {
 			'typescript/no-import-type-side-effects': 'off',
 			'typescript/prefer-readonly-parameter-types': 'off',
 			'unicorn/no-null': 'off',
-			'vitest/consistent-test-filename': ['error', { pattern: '.*\\.spec\\.tsx?$' }],
+			'vitest/consistent-test-filename': ['error', { pattern: String.raw`.*\.spec\.tsx?$` }],
 			'vitest/no-hooks': 'off',
 		},
 	},

@@ -41,13 +41,13 @@
 		"provenance": true
 	},
 	"scripts": {
-		"check": "bun run --parallel fmt:check lint lockfile:check",
-		"fmt": "oxfmt --write .",
-		"fmt:check": "oxfmt --check .",
-		"lint": "oxlint",
-		"lint:fix": "oxlint --fix",
+		"check": "vp check && bun run lockfile:check",
+		"fmt": "vp fmt",
+		"fmt:check": "vp fmt --check",
+		"lint": "vp lint",
+		"lint:fix": "vp lint --fix",
 		"lockfile:check": "bun install --frozen-lockfile",
-		"prepare": "lefthook install",
+		"prepare": "vp config --no-agent",
 		"publish:packages": "bun scripts/publish.ts",
 		"version:check": "bun scripts/versions.ts check",
 		"version:set": "bun scripts/versions.ts set"
@@ -61,11 +61,10 @@
 		"@configg/tsconfig": "workspace:*",
 		"@types/bun": "^1.4.2",
 		"eslint-plugin-testing-library": "^7.16.2",
-		"lefthook": "^2.1.14",
-		"oxfmt": "^0.68.0",
-		"oxlint": "^1.83.0",
-		"oxlint-tsgolint": "^7.0.2002",
-		"typescript": "7"
+		"oxfmt": "^0.79.0",
+		"oxlint": "^1.94.0",
+		"typescript": "7",
+		"vite-plus": "1.7.0"
 	},
 	"peerDependencies": {
 		"@ianvs/prettier-plugin-sort-imports": "^4",

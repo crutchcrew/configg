@@ -1,0 +1,37 @@
+import { configs as fmtConfigs } from '@configg/oxc/fmt'
+import { antiSlop, configs as lintConfigs } from '@configg/oxc/lint'
+import { defineConfig } from 'vite-plus'
+
+const ignorePatterns = ['packages/oxc/src/anti-slop/**']
+
+export default defineConfig({
+	fmt: {
+		...fmtConfigs.scripts,
+		ignorePatterns,
+	},
+	lint: {
+		...lintConfigs.scripts,
+		globals: { Bun: 'readonly' },
+		ignorePatterns,
+		jsPlugins: [...antiSlop.jsPlugins],
+		overrides: [
+			{
+				files: ['scripts/**'],
+				rules: {
+					'eslint/max-statements': 'off',
+					'eslint/no-await-in-loop': 'off',
+					'eslint/no-console': 'off',
+					'eslint/no-ternary': 'off',
+					'eslint/no-undefined': 'off',
+					'oxc/no-optional-chaining': 'off',
+					'unicorn/no-await-expression-member': 'off',
+					'unicorn/no-null': 'off',
+				},
+			},
+		],
+		rules: { ...lintConfigs.scripts.rules, ...antiSlop.rules },
+	},
+	staged: {
+		'*': 'vp check --fix',
+	},
+})

@@ -29,12 +29,13 @@ jobs:
       - name: Verify tag matches every package version
         run: bun scripts/versions.ts check "$TAG"
 
-      - run: bun install --frozen-lockfile
-
+      # Before install: the prepare script runs Vite+ (`vp config`), which needs Node.js.
       - uses: actions/setup-node@v7
         with:
           node-version: lts/*
           registry-url: https://registry.npmjs.org
+
+      - run: bun install --frozen-lockfile
 
       # Publishes @configg/bases (repo root), oxc, prettier and tsconfig.
       # Versions already on npm are skipped, so re-running is safe.

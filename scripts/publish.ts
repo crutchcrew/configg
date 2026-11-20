@@ -4,7 +4,7 @@
  * be re-run safely.
  *
  *   bun scripts/publish.ts              publish with provenance
- *   bun scripts/publish.ts --dry-run    pack and validate, publish nothing
+ *   bun scripts/publish.ts --dry-run    pack (npm pack --dry-run), publish nothing
  */
 import { workspaces } from './manifest.ts'
 
@@ -32,7 +32,8 @@ for (const { cwd, manifest } of await workspaces()) {
 	}
 
 	console.log(`- ${dryRun ? 'Packing' : 'Publishing'} ${label}`)
-	const args = ['publish', '--access', 'public', ...(dryRun ? ['--dry-run'] : ['--provenance'])]
+	// Dry runs only pack: npm 11 fails `publish --dry-run` for versions already on npm.
+	const args = dryRun ? ['pack', '--dry-run'] : ['publish', '--access', 'public', '--provenance']
 	const proc = Bun.spawn(['npm', ...args], { cwd, stderr: 'inherit', stdout: 'inherit' })
 
 	if ((await proc.exited) !== 0) {

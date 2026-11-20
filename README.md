@@ -83,11 +83,11 @@ If your config has its own `jsPlugins`, keep the anti-slop entry in that array. 
 
 ## Development
 
-The repo uses its own packages through the workspace, so there is nothing to build.
+The repo uses its own packages through the workspace, so there is nothing to build. Formatting, linting, type-checking and git hooks run through [Vite+](https://viteplus.dev) (`vp`), configured in `vite.config.ts`. `vp` needs Node.js (22.22.1+ or 24.11+) on `PATH` next to Bun, including when the pre-commit hook runs.
 
 ```sh
-bun install
-bun run check      # fmt + lint (with type-check) + lockfile, in parallel
+bun install        # also installs the git hooks (.vite-hooks)
+bun run check      # vp check (fmt + lint + type-check), then the lockfile check
 ```
 
 ## License

@@ -21,6 +21,24 @@ const base = {
 	useTabs: true,
 } satisfies OxfmtConfig
 
+// Bare `bun` reads as an external package to oxfmt; `bun:*` and `node:*` are already `builtin`
+const bunGroup = { elementNamePattern: ['bun'], groupName: 'bun' }
+
+/** Built-ins (with Bun), packages, `#/` and other internal paths, relative paths, styles, then anything left. */
+const sortImports = {
+	customGroups: [bunGroup],
+	groups: [
+		['builtin', 'bun'],
+		'external',
+		['internal', 'subpath'],
+		['parent', 'sibling', 'index'],
+		'style',
+		'unknown',
+	],
+} satisfies OxfmtConfig['sortImports']
+
+const server = { ...base, sortImports } satisfies OxfmtConfig
+
 export const configs = {
 	client: {
 		...base,
@@ -31,16 +49,27 @@ export const configs = {
 		sortImports: {
 			customGroups: [
 				{ elementNamePattern: ['react', 'react/**', 'react-*', 'react-*/**'], groupName: 'react' },
+				bunGroup,
 				{ elementNamePattern: ['**/components/**', '**/components'], groupName: 'components' },
 				{ elementNamePattern: ['**/utils/**', '**/utils'], groupName: 'utils' },
 			],
-			groups: ['react', 'external', 'components', 'utils', ['parent', 'sibling', 'index']],
+			groups: [
+				'react',
+				['builtin', 'bun'],
+				'external',
+				['internal', 'subpath'],
+				'components',
+				'utils',
+				['parent', 'sibling', 'index'],
+				'style',
+				'unknown',
+			],
 		},
 		sortTailwindcss: {
 			attributes: ['class', 'className'],
 			functions: ['cx', 'createVariants'],
 		},
 	},
-	scripts: base,
-	server: base,
+	scripts: server,
+	server,
 } satisfies Record<string, OxfmtConfig>

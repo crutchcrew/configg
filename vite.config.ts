@@ -16,6 +16,16 @@ export default defineConfig({
 		jsPlugins: [...antiSlop.jsPlugins],
 		overrides: [
 			{
+				// Rule code narrows AST nodes that are often absent: optional chaining and null are the natural fit
+				files: ['packages/oxc/src/bun-test/**', 'packages/oxc/test/**'],
+				rules: {
+					'eslint/no-ternary': 'off',
+					'eslint/no-undefined': 'off',
+					'oxc/no-optional-chaining': 'off',
+					'unicorn/no-null': 'off',
+				},
+			},
+			{
 				files: ['scripts/**'],
 				rules: {
 					'eslint/max-statements': 'off',
@@ -30,6 +40,9 @@ export default defineConfig({
 			},
 		],
 		rules: { ...lintConfigs.scripts.rules, ...antiSlop.rules },
+	},
+	test: {
+		include: ['packages/*/test/**/*.spec.ts'],
 	},
 	staged: {
 		'*': 'vp check --fix',

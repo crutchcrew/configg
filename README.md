@@ -79,6 +79,8 @@ export default defineConfig({
 
 If your config has its own `jsPlugins`, keep the anti-slop entry in that array. The plugin ships as TypeScript, so run oxlint under Bun (`bunx --bun oxlint`): Node refuses to strip types from files in `node_modules`.
 
+`bunTest` from the oxlint entry is an opt-in override for `bun:test` specs (`**/*.spec.{ts,tsx}`): a `bun:test` plugin whose five rules see `describe`, `it` and the hooks when they're imported from `bun:test`, which oxlint's built-in `jest`/`vitest` rules don't. Add it with `overrides: [...configs.client.overrides, bunTest]`. See [its docs](./packages/oxc/docs/bun-test/README.md).
+
 `eslint-plugin-testing-library` is only needed for `configs.client` in the oxlint preset.
 
 ## Development

@@ -1,5 +1,5 @@
 {
 	"$schema": "https://www.schemastore.org/tsconfig",
 	"extends": "@configg/tsconfig/bun",
-	"include": ["packages/*/src", "scripts", "*.config.ts"]
+	"include": ["packages/*/src", "packages/*/test", "scripts", "*.config.ts"]
 }

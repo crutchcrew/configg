@@ -1,6 +1,6 @@
 {
 	"name": "@configg/bases",
-	"version": "0.1.12",
+	"version": "0.1.13",
 	"description": "All @configg presets in one package: oxc, prettier and tsconfig",
 	"keywords": [
 		"config",
@@ -41,7 +41,7 @@
 		"provenance": true
 	},
 	"scripts": {
-		"check": "vp check && bun run lockfile:check",
+		"check": "vp check && vp test && bun run lockfile:check",
 		"fmt": "vp fmt",
 		"fmt:check": "vp fmt --check",
 		"lint": "vp lint",
@@ -49,6 +49,7 @@
 		"lockfile:check": "bun install --frozen-lockfile",
 		"prepare": "vp config --no-agent",
 		"publish:packages": "bun scripts/publish.ts",
+		"test": "vp test",
 		"version:check": "bun scripts/versions.ts check",
 		"version:set": "bun scripts/versions.ts set"
 	},

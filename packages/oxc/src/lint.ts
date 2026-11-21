@@ -1,4 +1,4 @@
-import type { OxlintConfig, OxlintOverride } from 'oxlint'
+import type { OxlintConfig } from 'oxlint'
 
 const antiSlopPlugin = { name: 'anti-slop', specifier: `${import.meta.dirname}/anti-slop/index.ts` }
 
@@ -34,7 +34,7 @@ const sharedRules = {
 	'unicorn/number-literal-case': 'off',
 } as const satisfies OxlintConfig['rules']
 
-/** Opt in by spreading into a preset. The plugin ships as TypeScript, so run oxlint under Bun. */
+/** Opt in by adding to `extends` after the base preset. The plugin ships as TypeScript, so run oxlint under Bun. */
 export const antiSlop = {
 	jsPlugins: [antiSlopPlugin],
 	rules: {
@@ -62,21 +62,24 @@ export const antiSlop = {
 } as const satisfies OxlintConfig
 
 /**
- * Opt in by adding to `overrides`: the `bun:test` plugin with its five rules as errors, for `.spec.ts` and `.spec.tsx`
- * files. Replace `files` to cover other test file names. The plugin ships as TypeScript, so run oxlint under Bun.
- * Docs: ../docs/bun-test/README.md
+ * Opt in by adding to `extends`: the `bun:test` plugin with its five rules as errors, in an override for `.spec.ts` and
+ * `.spec.tsx` files. The plugin ships as TypeScript, so run oxlint under Bun. Docs: ../docs/bun-test/README.md
  */
 export const bunTest = {
-	files: ['**/*.spec.{ts,tsx}'],
-	jsPlugins: [bunTestPlugin],
-	rules: {
-		'bun:test/consistent-test-it': 'error',
-		'bun:test/no-top-level-hooks': 'error',
-		'bun:test/require-hook': 'error',
-		'bun:test/require-top-level-describe': 'error',
-		'bun:test/single-top-level-describe': 'error',
-	},
-} as const satisfies OxlintOverride
+	overrides: [
+		{
+			files: ['**/*.spec.{ts,tsx}'],
+			jsPlugins: [bunTestPlugin],
+			rules: {
+				'bun:test/consistent-test-it': 'error',
+				'bun:test/no-top-level-hooks': 'error',
+				'bun:test/require-hook': 'error',
+				'bun:test/require-top-level-describe': 'error',
+				'bun:test/single-top-level-describe': 'error',
+			},
+		},
+	],
+} as const satisfies OxlintConfig
 
 export const configs = {
 	client: {

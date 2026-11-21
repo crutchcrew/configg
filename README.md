@@ -72,14 +72,15 @@ import { antiSlop, configs } from '@configg/bases/oxlint'
 
 export default defineConfig({
 	...configs.client,
-	jsPlugins: [...antiSlop.jsPlugins],
-	rules: { ...configs.client.rules, ...antiSlop.rules },
+	extends: [antiSlop],
 })
 ```
 
-If your config has its own `jsPlugins`, keep the anti-slop entry in that array. The plugin ships as TypeScript, so run oxlint under Bun (`bunx --bun oxlint`): Node refuses to strip types from files in `node_modules`.
+The plugin ships as TypeScript, so run oxlint under Bun (`bunx --bun oxlint`): Node refuses to strip types from files in `node_modules`.
 
-`bunTest` from the oxlint entry is an opt-in override for `bun:test` specs (`**/*.spec.{ts,tsx}`): a `bun:test` plugin whose five rules see `describe`, `it` and the hooks when they're imported from `bun:test`, which oxlint's built-in `jest`/`vitest` rules don't. Add it with `overrides: [...configs.client.overrides, bunTest]`. See [its docs](./packages/oxc/docs/bun-test/README.md).
+`bunTest` from the oxlint entry is an opt-in preset for `bun:test` specs (`**/*.spec.{ts,tsx}`): a `bun:test` plugin whose five rules see `describe`, `it` and the hooks when they're imported from `bun:test`, which oxlint's built-in `jest`/`vitest` rules don't. Add it with `extends: [bunTest]`. See [its docs](./packages/oxc/docs/bun-test/README.md).
+
+Spread the base preset and put the add-ons in `extends` (`{ ...configs.client, extends: [antiSlop, bunTest] }`): Oxlint's `extends` doesn't pass on `env` or `globals`, so a base preset in `extends` loses them. See [Composing presets](./packages/oxc/README.md#composing-presets), including how to turn off a rule an add-on enables in an override.
 
 `eslint-plugin-testing-library` is only needed for `configs.client` in the oxlint preset.
 

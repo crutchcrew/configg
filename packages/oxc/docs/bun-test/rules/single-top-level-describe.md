@@ -50,15 +50,16 @@ No options.
 
 ## How to use
 
-To **enable** this rule, add the `bun:test` plugin and the rule to an override for your spec files. `bunTest` from `@configg/oxc/lint` already does this, with all five rules as errors:
+To **enable** this rule, add the `bun:test` plugin and the rule to an override for your spec files. The `bunTest` preset from `@configg/oxc/lint` already does this, with all five rules as errors:
 
 ```ts
 // oxlint.config.ts
 import { defineConfig } from 'oxlint'
-import { bunTest } from '@configg/oxc/lint'
+import { bunTest, configs } from '@configg/oxc/lint'
 
 export default defineConfig({
-	overrides: [bunTest],
+	...configs.client,
+	extends: [bunTest],
 })
 ```
 

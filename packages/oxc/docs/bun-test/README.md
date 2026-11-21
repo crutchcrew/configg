@@ -1,7 +1,7 @@
 # `bun:test` plugin
 
 An Oxlint JS plugin for the layout of specs written with Bun's test runner, [`bun:test`](https://bun.com/docs/test).
-It ships in `@configg/oxc` (and `@configg/bases`) as the `bunTest` override.
+It ships in `@configg/oxc` (and `@configg/bases`) as the `bunTest` preset.
 
 ## What the plugin is for
 
@@ -59,25 +59,45 @@ There is no option to match globals. A spec that relies on Bun's injected global
 
 ## How to use
 
-`bunTest` from `@configg/oxc/lint` (or `@configg/bases/oxlint`) is an override: the plugin and its five rules as errors, scoped to `**/*.spec.{ts,tsx}`. Add it to `overrides`.
+`bunTest` from `@configg/oxc/lint` (or `@configg/bases/oxlint`) is a preset: one override for `**/*.spec.{ts,tsx}` with the plugin and its five rules as errors. Add it to `extends`, next to a spread base preset:
 
 ```ts
 // oxlint.config.ts
 import { defineConfig } from 'oxlint'
-import { bunTest, configs } from '@configg/oxc/lint'
+import { antiSlop, bunTest, configs } from '@configg/oxc/lint'
 
 export default defineConfig({
-	...configs.scripts,
-	overrides: [bunTest],
+	...configs.client,
+	extends: [antiSlop, bunTest],
 })
 ```
 
-When the preset has overrides of its own, keep them, and replace `files` if your specs are named differently:
+Spread the base preset rather than listing it in `extends`: Oxlint's `extends` doesn't pass on `env` or `globals`.
+
+If your specs are named differently, extend a copy of the override with new `files`:
 
 ```ts
 export default defineConfig({
 	...configs.client,
-	overrides: [...configs.client.overrides, { ...bunTest, files: ['**/*.test.ts'] }],
+	extends: [{ overrides: [{ ...bunTest.overrides[0], files: ['**/*.test.ts'] }] }],
+})
+```
+
+### Turning a rule off
+
+`bunTest` enables its rules inside an override, and a matching override applies after your top-level `rules`. So turning a rule off in `rules` does nothing for spec files; turn it off in an override of your own, which applies after the ones from `extends`:
+
+```ts
+export default defineConfig({
+	...configs.client,
+	extends: [bunTest],
+	// No effect: bunTest's override sets the rule back to 'error' for spec files
+	rules: { ...configs.client.rules, 'bun:test/require-hook': 'off' },
+	// Works
+	overrides: [
+		...configs.client.overrides,
+		{ files: ['**/*.spec.{ts,tsx}'], rules: { 'bun:test/require-hook': 'off' } },
+	],
 })
 ```
 

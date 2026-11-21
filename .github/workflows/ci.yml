@@ -33,5 +33,9 @@ jobs:
       - name: Format, lint and type check
         run: bunx vp check
 
+      # Rule tests use oxlint's RuleTester, which needs Node.js: Vite+ runs them with Vitest.
+      - name: Test
+        run: bunx vp test
+
       - name: Pack (dry run)
         run: bun run publish:packages --dry-run

@@ -1,6 +1,8 @@
-import type { OxlintConfig } from 'oxlint'
+import type { OxlintConfig, OxlintOverride } from 'oxlint'
 
 const antiSlopPlugin = { name: 'anti-slop', specifier: `${import.meta.dirname}/anti-slop/index.ts` }
+
+const bunTestPlugin = { name: 'bun:test', specifier: `${import.meta.dirname}/bun-test/index.ts` }
 
 const sharedRules = {
 	'eslint/eqeqeq': 'error',
@@ -58,6 +60,23 @@ export const antiSlop = {
 		'unicorn/prefer-reflect-apply': 'off',
 	},
 } as const satisfies OxlintConfig
+
+/**
+ * Opt in by adding to `overrides`: the `bun:test` plugin with its five rules as errors, for `.spec.ts` and `.spec.tsx`
+ * files. Replace `files` to cover other test file names. The plugin ships as TypeScript, so run oxlint under Bun.
+ * Docs: ../docs/bun-test/README.md
+ */
+export const bunTest = {
+	files: ['**/*.spec.{ts,tsx}'],
+	jsPlugins: [bunTestPlugin],
+	rules: {
+		'bun:test/consistent-test-it': 'error',
+		'bun:test/no-top-level-hooks': 'error',
+		'bun:test/require-hook': 'error',
+		'bun:test/require-top-level-describe': 'error',
+		'bun:test/single-top-level-describe': 'error',
+	},
+} as const satisfies OxlintOverride
 
 export const configs = {
 	client: {

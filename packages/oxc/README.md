@@ -54,6 +54,31 @@ export default defineConfig({
 
 If your config has its own `jsPlugins`, keep the anti-slop entry in that array. The plugin ships as TypeScript, so run oxlint under Bun (`bunx --bun oxlint`): Node refuses to strip types from files in `node_modules`.
 
+### `bun:test` plugin
+
+`bunTest` from `@configg/oxc/lint` is an opt-in override for `bun:test` specs: the `bun:test` plugin and its five rules as errors, scoped to `**/*.spec.{ts,tsx}`. Oxlint's built-in `jest` and `vitest` rules don't recognise `describe`, `it` or the hooks when they're imported from `bun:test`; these rules do. They hold a spec to one shape: imports, constants and helpers, then one `describe` holding every test, hook and mock.
+
+```ts
+import { bunTest, configs } from '@configg/oxc/lint'
+
+export default defineConfig({
+	...configs.client,
+	overrides: [...configs.client.overrides, bunTest],
+})
+```
+
+Use `{ ...bunTest, files: ['**/*.test.ts'] }` for other spec names. Like anti-slop, the plugin ships as TypeScript, so run oxlint under Bun.
+
+| Rule                                                                                         | Fixable | Reports                                                                                |
+| -------------------------------------------------------------------------------------------- | ------- | -------------------------------------------------------------------------------------- |
+| [`bun:test/consistent-test-it`](./docs/bun-test/rules/consistent-test-it.md)                 | Yes     | `test(...)` or `test.each(...)`: write `it(...)`                                       |
+| [`bun:test/require-top-level-describe`](./docs/bun-test/rules/require-top-level-describe.md) | No      | a test at the top level of the file                                                    |
+| [`bun:test/no-top-level-hooks`](./docs/bun-test/rules/no-top-level-hooks.md)                 | No      | a hook at the top level of the file                                                    |
+| [`bun:test/require-hook`](./docs/bun-test/rules/require-hook.md)                             | No      | other top-level calls, such as `mock.module(...)`, and top-level `spyOn`/`mock` values |
+| [`bun:test/single-top-level-describe`](./docs/bun-test/rules/single-top-level-describe.md)   | No      | a second top-level `describe`                                                          |
+
+The rules match names by their `bun:test` import, so renamed and namespace imports count and globals don't. See [the plugin docs](./docs/bun-test/README.md) for the details and per-rule pages.
+
 Both presets allow up to two classes per file, allow `forEach()` and `reduce()`, allow `process.exit()` (CLI scripts and
 shutdown handlers exit with a status code on purpose) and allow short identifiers (`eslint/id-length` is off). They turn `import/prefer-default-export` off, since named
 exports are the convention (it matters once a config adds the `import` plugin), `unicorn/import-style` off, since named

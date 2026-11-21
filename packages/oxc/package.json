@@ -1,6 +1,6 @@
 {
 	"name": "@configg/oxc",
-	"version": "0.1.12",
+	"version": "0.1.13",
 	"description": "oxfmt and oxlint presets",
 	"keywords": [
 		"config",

@@ -11,9 +11,9 @@ export default defineConfig({
 	},
 	lint: {
 		...lintConfigs.scripts,
+		extends: [antiSlop],
 		globals: { Bun: 'readonly' },
 		ignorePatterns,
-		jsPlugins: [...antiSlop.jsPlugins],
 		overrides: [
 			{
 				// Rule code narrows AST nodes that are often absent: optional chaining and null are the natural fit
@@ -39,7 +39,6 @@ export default defineConfig({
 				},
 			},
 		],
-		rules: { ...lintConfigs.scripts.rules, ...antiSlop.rules },
 	},
 	test: {
 		include: ['packages/*/test/**/*.spec.ts'],

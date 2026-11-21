@@ -1,6 +1,6 @@
 import { defineRule } from '@oxlint/plugins'
 
-import { cases, topLevelBunTestCalls } from '../shared/bun-test.ts'
+import { cases, importsBunTest, topLevelBunTestCalls } from '../shared/bun-test.ts'
 import { docsUrl } from '../shared/docs.ts'
 
 /** Report an `it(...)` or `test(...)` call at the top level of a file instead of inside its `describe`. */
@@ -17,6 +17,11 @@ export const requireTopLevelDescribe = defineRule({
 		schema: [],
 	},
 	create(context) {
+		// Without a `bun:test` import there is nothing for this rule to match, so skip the file
+		if (!importsBunTest(context.sourceCode.ast)) {
+			return {}
+		}
+
 		return {
 			Program(program): void {
 				for (const { name, statement } of topLevelBunTestCalls(context.sourceCode, program)) {

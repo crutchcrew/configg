@@ -55,11 +55,11 @@ The rules match a name by what it is bound to, not by how it is spelled:
 - Chained calls start from their root name: `it.each([...])('name', fn)`, `describe.skip(...)` and `test.if(ok)(...)` are all calls of the bare name.
 - Anything else does not count: a global `describe`, an import from `vitest` or another module, or a local variable or parameter that shadows the import.
 
-There is no option to match globals. A spec that relies on Bun's injected globals instead of importing from `bun:test` is the case the built-in `jest`/`vitest` rules already cover, so use those for it. [`require-hook`](./rules/require-hook.md), which reports arbitrary calls, does nothing in a file with no `bun:test` import.
+There is no option to match globals. A spec that relies on Bun's injected globals instead of importing from `bun:test` is the case the built-in `jest`/`vitest` rules already cover, so use those for it. Every rule does nothing in a file with no `bun:test` import.
 
 ## How to use
 
-`bunTest` from `@configg/oxc/lint` (or `@configg/bases/oxlint`) is a preset: one override for `**/*.spec.{ts,tsx}` with the plugin and its five rules as errors. Add it to `extends`, next to a spread base preset:
+`bunTest` from `@configg/oxc/lint` (or `@configg/bases/oxlint`) is a preset: the plugin and its five rules as errors. Add it to `extends`, next to a spread base preset:
 
 ```ts
 // oxlint.config.ts
@@ -74,30 +74,13 @@ export default defineConfig({
 
 Spread the base preset rather than listing it in `extends`: Oxlint's `extends` doesn't pass on `env` or `globals`.
 
-If your specs are named differently, extend a copy of the override with new `files`:
-
-```ts
-export default defineConfig({
-	...configs.client,
-	extends: [{ overrides: [{ ...bunTest.overrides[0], files: ['**/*.test.ts'] }] }],
-})
-```
-
-### Turning a rule off
-
-`bunTest` enables its rules inside an override, and a matching override applies after your top-level `rules`. So turning a rule off in `rules` does nothing for spec files; turn it off in an override of your own, which applies after the ones from `extends`:
+To turn a rule off, set it in your own `rules`, which apply after the ones from `extends`:
 
 ```ts
 export default defineConfig({
 	...configs.client,
 	extends: [bunTest],
-	// No effect: bunTest's override sets the rule back to 'error' for spec files
 	rules: { ...configs.client.rules, 'bun:test/require-hook': 'off' },
-	// Works
-	overrides: [
-		...configs.client.overrides,
-		{ files: ['**/*.spec.{ts,tsx}'], rules: { 'bun:test/require-hook': 'off' } },
-	],
 })
 ```
 
@@ -108,18 +91,44 @@ To pick rules one by one, list the plugin and the rules you want. The plugin's n
 ```jsonc
 // .oxlintrc.json
 {
-	"overrides": [
-		{
-			"files": ["**/*.spec.ts"],
-			"jsPlugins": ["./node_modules/@configg/oxc/src/bun-test/index.ts"],
-			"rules": {
-				"bun:test/consistent-test-it": "error",
-				"bun:test/require-top-level-describe": "error",
-			},
-		},
-	],
+	"jsPlugins": ["./node_modules/@configg/oxc/src/bun-test/index.ts"],
+	"rules": {
+		"bun:test/consistent-test-it": "error",
+		"bun:test/require-top-level-describe": "error",
+	},
 }
 ```
+
+### Which files it checks
+
+`bunTest` has no file glob. Every rule skips a file that imports nothing from `bun:test`, so the preset applies to every file that does, whatever it is named: `*.spec.ts`, `*.test.ts`, files under `__tests__/`. Two things follow from that:
+
+- **Setup files that import `bun:test` are checked too.** A [preload file](https://bun.com/docs/test/lifecycle) (`[test] preload` in `bunfig.toml`) holds global hooks and module mocks on purpose, so `no-top-level-hooks` and `require-hook` report it. Turn those two off for it:
+
+  ```ts
+  export default defineConfig({
+  	...configs.client,
+  	extends: [bunTest],
+  	overrides: [
+  		...configs.client.overrides,
+  		{
+  			files: ['test/setup.ts'],
+  			rules: { 'bun:test/no-top-level-hooks': 'off', 'bun:test/require-hook': 'off' },
+  		},
+  	],
+  })
+  ```
+
+- **Oxlint passes every file to the plugin.** JS plugin rules run for every file the config covers, not only test files. The rules return as soon as they see no `bun:test` import, but oxlint still hands each file to the JS side, which costs a little per file. If `antiSlop` is on, both plugins share that hand-off and `bunTest` only adds its import check. To limit the plugin to test files instead, put its plugin and rules in an override:
+
+  ```ts
+  export default defineConfig({
+  	...configs.client,
+  	overrides: [...configs.client.overrides, { files: ['**/*.spec.{ts,tsx}'], ...bunTest }],
+  })
+  ```
+
+  A rule enabled inside an override is only turned off by a later override, not by top-level `rules`.
 
 ## Rules
 

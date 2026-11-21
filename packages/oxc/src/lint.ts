@@ -3,6 +3,7 @@ import type { OxlintConfig } from 'oxlint'
 const antiSlopPlugin = { name: 'anti-slop', specifier: `${import.meta.dirname}/anti-slop/index.ts` }
 
 const sharedRules = {
+	'eslint/eqeqeq': 'error',
 	'eslint/id-length': 'off',
 	'eslint/max-classes-per-file': ['warn', { max: 2 }],
 	'eslint/max-lines-per-function': ['warn', { max: 100, skipBlankLines: true, skipComments: true }],
@@ -22,6 +23,7 @@ const sharedRules = {
 			allowNumber: true,
 		},
 	],
+	'typescript/strict-boolean-expressions': 'error',
 	'unicorn/import-style': 'off',
 	'unicorn/no-array-for-each': 'off',
 	'unicorn/no-array-reduce': 'off',

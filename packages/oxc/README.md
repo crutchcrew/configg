@@ -64,6 +64,11 @@ off), an `async` function needs no `await` (`eslint/require-await` and `typescri
 not counted) and 30 statements. Template expressions
 allow booleans, numbers, nullish values and `never`; other types follow Oxlint's defaults.
 
+Both presets make two `pedantic` rules errors rather than warnings: `eslint/eqeqeq` requires `===` and `!==`, and
+`typescript/strict-boolean-expressions` keeps its default options: conditions may be booleans, strings, numbers or
+nullable objects, but not `any` or a broad nullable primitive such as `boolean | undefined` or `string | undefined`, so
+those conditions have to handle the nullish case explicitly.
+
 ## Peer dependencies
 
 `oxfmt`, `oxlint`, `oxlint-tsgolint` and `eslint-plugin-testing-library` are all optional peers, so you install only the ones the presets you use need.

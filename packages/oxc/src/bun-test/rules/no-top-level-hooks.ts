@@ -1,6 +1,6 @@
 import { defineRule } from '@oxlint/plugins'
 
-import { hooks, topLevelBunTestCalls } from '../shared/bun-test.ts'
+import { hooks, importsBunTest, topLevelBunTestCalls } from '../shared/bun-test.ts'
 import { docsUrl } from '../shared/docs.ts'
 
 /** Report `beforeAll`, `beforeEach`, `afterAll` or `afterEach` at the top level of a file. */
@@ -17,6 +17,11 @@ export const noTopLevelHooks = defineRule({
 		schema: [],
 	},
 	create(context) {
+		// Without a `bun:test` import there is nothing for this rule to match, so skip the file
+		if (!importsBunTest(context.sourceCode.ast)) {
+			return {}
+		}
+
 		return {
 			Program(program): void {
 				for (const { name, statement } of topLevelBunTestCalls(context.sourceCode, program)) {

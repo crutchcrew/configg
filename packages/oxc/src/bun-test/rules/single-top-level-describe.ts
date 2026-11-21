@@ -1,6 +1,6 @@
 import { defineRule } from '@oxlint/plugins'
 
-import { describes, topLevelBunTestCalls } from '../shared/bun-test.ts'
+import { describes, importsBunTest, topLevelBunTestCalls } from '../shared/bun-test.ts'
 import { docsUrl } from '../shared/docs.ts'
 
 /** Report every top-level `describe` after the first: a spec has one, and the rest nest inside it. */
@@ -17,6 +17,11 @@ export const singleTopLevelDescribe = defineRule({
 		schema: [],
 	},
 	create(context) {
+		// Without a `bun:test` import there is nothing for this rule to match, so skip the file
+		if (!importsBunTest(context.sourceCode.ast)) {
+			return {}
+		}
+
 		return {
 			Program(program): void {
 				let seen = false

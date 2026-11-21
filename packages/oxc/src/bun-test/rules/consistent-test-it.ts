@@ -1,6 +1,6 @@
 import { defineRule, type Fix } from '@oxlint/plugins'
 
-import { bunTestCallee, localIt } from '../shared/bun-test.ts'
+import { bunTestCallee, importsBunTest, localIt } from '../shared/bun-test.ts'
 import { docsUrl } from '../shared/docs.ts'
 
 /** Write every test as `it(...)`: `test(...)` and `test.each(...)` from `bun:test` are reported. */
@@ -18,6 +18,11 @@ export const consistentTestIt = defineRule({
 		schema: [],
 	},
 	create(context) {
+		// Without a `bun:test` import there is nothing for this rule to match, so skip the file
+		if (!importsBunTest(context.sourceCode.ast)) {
+			return {}
+		}
+
 		const { sourceCode } = context
 
 		return {

@@ -62,23 +62,19 @@ export const antiSlop = {
 } as const satisfies OxlintConfig
 
 /**
- * Opt in by adding to `extends`: the `bun:test` plugin with its five rules as errors, in an override for `.spec.ts` and
- * `.spec.tsx` files. The plugin ships as TypeScript, so run oxlint under Bun. Docs: ../docs/bun-test/README.md
+ * Opt in by adding to `extends`: the `bun:test` plugin with its five rules as errors. There is no file glob: the rules
+ * only act on files that import from `bun:test`, whatever they are named. The plugin ships as TypeScript, so run oxlint
+ * under Bun. Docs: ../docs/bun-test/README.md
  */
 export const bunTest = {
-	overrides: [
-		{
-			files: ['**/*.spec.{ts,tsx}'],
-			jsPlugins: [bunTestPlugin],
-			rules: {
-				'bun:test/consistent-test-it': 'error',
-				'bun:test/no-top-level-hooks': 'error',
-				'bun:test/require-hook': 'error',
-				'bun:test/require-top-level-describe': 'error',
-				'bun:test/single-top-level-describe': 'error',
-			},
-		},
-	],
+	jsPlugins: [bunTestPlugin],
+	rules: {
+		'bun:test/consistent-test-it': 'error',
+		'bun:test/no-top-level-hooks': 'error',
+		'bun:test/require-hook': 'error',
+		'bun:test/require-top-level-describe': 'error',
+		'bun:test/single-top-level-describe': 'error',
+	},
 } as const satisfies OxlintConfig
 
 export const configs = {

@@ -53,15 +53,15 @@ export const requireHook = defineRule({
 		schema: [],
 	},
 	create(context) {
+		// Without a `bun:test` import there is nothing for this rule to match, so skip the file
+		if (!importsBunTest(context.sourceCode.ast)) {
+			return {}
+		}
+
 		const { sourceCode } = context
 
 		return {
 			Program(program): void {
-				// Without a `bun:test` import this is not a bun:test spec, and its `describe(...)` is not ours to judge
-				if (!importsBunTest(program)) {
-					return
-				}
-
 				for (const statement of program.body) {
 					const call = topLevelCall(statement)
 

@@ -50,7 +50,7 @@ No options.
 
 ## How to use
 
-To **enable** this rule, add the `bun:test` plugin and the rule to an override for your spec files. The `bunTest` preset from `@configg/oxc/lint` already does this, with all five rules as errors:
+To **enable** this rule, add the `bun:test` plugin and the rule to your config. The `bunTest` preset from `@configg/oxc/lint` already does this, with all five rules as errors:
 
 ```ts
 // oxlint.config.ts
@@ -68,15 +68,10 @@ To enable this rule alone:
 ```jsonc
 // .oxlintrc.json
 {
-	"overrides": [
-		{
-			"files": ["**/*.spec.{ts,tsx}"],
-			"jsPlugins": ["./node_modules/@configg/oxc/src/bun-test/index.ts"],
-			"rules": {
-				"bun:test/single-top-level-describe": "error",
-			},
-		},
-	],
+	"jsPlugins": ["./node_modules/@configg/oxc/src/bun-test/index.ts"],
+	"rules": {
+		"bun:test/single-top-level-describe": "error",
+	},
 }
 ```
 

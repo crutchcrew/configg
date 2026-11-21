@@ -54,9 +54,9 @@ No options.
 To **enable** this rule, add the `bun:test` plugin and the rule to your config. The `bunTest` preset from `@configg/oxc/lint` already does this, with all five rules as errors:
 
 ```ts
+import { bunTest, configs } from '@configg/oxc/lint'
 // oxlint.config.ts
 import { defineConfig } from 'oxlint'
-import { bunTest, configs } from '@configg/oxc/lint'
 
 export default defineConfig({
 	...configs.client,

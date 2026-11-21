@@ -5,8 +5,22 @@ const antiSlopPlugin = { name: 'anti-slop', specifier: `${import.meta.dirname}/a
 const bunTestPlugin = { name: 'bun:test', specifier: `${import.meta.dirname}/bun-test/index.ts` }
 
 const sharedRules = {
+	// Only the first line of a wrapped `//` comment needs a capital. Tool pragmas that must stay lowercase are skipped;
+	// oxlint already skips its own and ESLint's directives, `prettier-ignore`, `istanbul` and `jshint`.
+	'eslint/capitalized-comments': [
+		'warn',
+		'always',
+		{
+			ignoreConsecutiveComments: true,
+			ignorePattern:
+				'svelte-ignore|biome-ignore|c8 ignore|v8 ignore|cspell:|noinspection|webpack[A-Z]',
+		},
+	],
 	'eslint/eqeqeq': 'error',
 	'eslint/id-length': 'off',
+	// For a variable with no meaningful starting value it wants `let x = undefined`, which unicorn/no-useless-undefined
+	// rejects. Keep that rule and write `let x: T | undefined`.
+	'eslint/init-declarations': 'off',
 	'eslint/max-classes-per-file': ['warn', { max: 2 }],
 	'eslint/max-lines-per-function': ['warn', { max: 100, skipBlankLines: true, skipComments: true }],
 	'eslint/max-statements': ['warn', { max: 30 }],

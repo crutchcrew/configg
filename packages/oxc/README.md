@@ -14,25 +14,36 @@ bun add -d @configg/oxc oxfmt oxlint oxlint-tsgolint
 `@configg/oxc/fmt` exports `configs`, a record of plain config objects. Pass one to oxfmt's `defineConfig()`.
 
 ```ts
+import { configs } from '@configg/oxc/fmt'
 // oxfmt.config.ts
 import { defineConfig } from 'oxfmt'
-import { configs } from '@configg/oxc/fmt'
 
 export default defineConfig(configs.client)
 ```
 
-- `client`: the shared base plus Tailwind class sorting (`class`, `className`, `cx`, `createVariants`) and import grouping (`react`, external, `components`, `utils`, relative).
-- `scripts`: the shared base, for tooling and config files.
-- `server`: the shared base.
+- `client`: the shared base plus Tailwind class sorting (`class`, `className`, `cx`, `createVariants`) and import grouping: `react`, built-ins, packages, internal paths, `components`, `utils`, relative paths, styles, then anything else.
+- `scripts`: the shared base plus import grouping, for tooling and config files.
+- `server`: the same as `scripts`.
+
+Import grouping, in order:
+
+- **Built-ins:** `node:*`, bare Node built-ins such as `path`, `bun:*`, and bare `bun`. oxfmt counts bare `bun` as a package, so the presets add a `bun` group that sorts with the built-ins.
+- **Packages.**
+- **Internal paths:** `#/…` [subpath imports](https://nodejs.org/api/packages.html#subpath-imports) and the `~/`, `@/` and `#` prefixes.
+- **Relative paths:** `../` and `./`.
+- **Style imports.**
+- **Anything else.**
+
+`client` puts `react` first, and `components` and `utils` paths after the internal ones. A blank line separates each group. Side-effect imports such as `import './global.css'` stay where they are, since oxfmt doesn't move them.
 
 ## Linter
 
 `@configg/oxc/lint` exports `configs`. Pass one to oxlint's `defineConfig()`.
 
 ```ts
+import { configs } from '@configg/oxc/lint'
 // oxlint.config.ts
 import { defineConfig } from 'oxlint'
-import { configs } from '@configg/oxc/lint'
 
 export default defineConfig(configs.client)
 ```
@@ -104,6 +115,10 @@ off), an `async` function needs no `await` (`eslint/require-await` and `typescri
 `typescript/promise-function-async` makes every promise-returning function `async`), `continue` is allowed (`eslint/no-continue` is off), and functions may run to 100 lines (blank lines and comments
 not counted) and 30 statements. Template expressions
 allow booleans, numbers, nullish values and `never`; other types follow Oxlint's defaults.
+
+Both presets set `eslint/capitalized-comments` to require a capital only on the first line of a wrapped `//` comment (`ignoreConsecutiveComments`). They also skip tool pragmas that have to stay lowercase: `svelte-ignore`, `biome-ignore`, `c8 ignore`, `v8 ignore`, `cspell:`, `noinspection` and webpack magic comments such as `webpackChunkName`. Oxlint already skips its own and ESLint's directives, `prettier-ignore`, `istanbul` and `jshint`.
+
+Both presets turn `eslint/init-declarations` off. It asks for `let x = undefined`, which `unicorn/no-useless-undefined` rejects, so no form of "declare now, assign later" passed both. For a variable with no meaningful starting value, write `let x: T | undefined`.
 
 Both presets make two `pedantic` rules errors rather than warnings: `eslint/eqeqeq` requires `===` and `!==`, and
 `typescript/strict-boolean-expressions` keeps its default options: conditions may be booleans, strings, numbers or

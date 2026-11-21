@@ -36,17 +36,17 @@ bun add -d @configg/bases oxfmt oxlint oxlint-tsgolint typescript
 ```
 
 ```ts
+import { configs } from '@configg/bases/oxfmt'
 // oxfmt.config.ts
 import { defineConfig } from 'oxfmt'
-import { configs } from '@configg/bases/oxfmt'
 
 export default defineConfig(configs.client)
 ```
 
 ```ts
+import { configs } from '@configg/bases/oxlint'
 // oxlint.config.ts
 import { defineConfig } from 'oxlint'
-import { configs } from '@configg/bases/oxlint'
 
 export default defineConfig(configs.client)
 ```
@@ -60,7 +60,7 @@ Installing a single package works the same way, for example `@configg/oxc/fmt` a
 
 ### Presets
 
-- `oxfmt` exports `configs`: `client` (Tailwind class sorting, import grouping), `scripts` (shared base for tooling and config files) and `server` (shared base).
+- `oxfmt` exports `configs`: `client` (Tailwind class sorting, import grouping with `react`, `components` and `utils` groups), `scripts` (shared base with import grouping, for tooling and config files) and `server` (same as `scripts`). Built-ins, including `bun` and `bun:*`, come first (after `react` in `client`), then packages, internal and `#/` paths, and relative paths.
 - `oxlint` exports `configs`: `client` (browser env, React, and a `**/*.spec.{ts,tsx}` override with Vitest and Testing Library rules) and `scripts` (Node env).
 - `prettier` exports `config` (the same options as oxfmt), one preset per plugin (`sortImports`, `astro`, `svelte`, `tailwind`) and `combine()` to merge them: `combine(config, sortImports, tailwind({ tailwindStylesheet: './src/main.css' }))`. See [its README](./packages/prettier/README.md).
 - `tsconfig/bun` (`strictest` + Bun), `tsconfig/vite` (`strictest` + Vite/React) and `tsconfig/client` (`vite` with ambient `types` cleared, so a package only picks up the `@types/*` it asks for).

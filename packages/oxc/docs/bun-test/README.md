@@ -62,9 +62,9 @@ There is no option to match globals. A spec that relies on Bun's injected global
 `bunTest` from `@configg/oxc/lint` (or `@configg/bases/oxlint`) is a preset: the plugin and its five rules as errors. Add it to `extends`, next to a spread base preset:
 
 ```ts
+import { antiSlop, bunTest, configs } from '@configg/oxc/lint'
 // oxlint.config.ts
 import { defineConfig } from 'oxlint'
-import { antiSlop, bunTest, configs } from '@configg/oxc/lint'
 
 export default defineConfig({
 	...configs.client,

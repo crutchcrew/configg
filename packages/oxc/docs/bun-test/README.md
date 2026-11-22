@@ -59,28 +59,25 @@ There is no option to match globals. A spec that relies on Bun's injected global
 
 ## How to use
 
-`bunTest` from `@configg/oxc/lint` (or `@configg/bases/oxlint`) is a preset: the plugin and its five rules as errors. Add it to `extends`, next to a spread base preset:
+`bunTest` from `@configg/oxc/lint` (or `@configg/bases/oxlint`) is a preset: the plugin and its five rules as errors. Add it to `extends` after a base preset:
 
 ```ts
-import { antiSlop, bunTest, configs } from '@configg/oxc/lint'
 // oxlint.config.ts
+
+import { antiSlop, bunTest, configs } from '@configg/oxc/lint'
 import { defineConfig } from 'oxlint'
 
 export default defineConfig({
-	...configs.client,
-	extends: [antiSlop, bunTest],
+	extends: [configs.client, antiSlop, bunTest],
 })
 ```
-
-Spread the base preset rather than listing it in `extends`: Oxlint's `extends` doesn't pass on `env` or `globals`.
 
 To turn a rule off, set it in your own `rules`, which apply after the ones from `extends`:
 
 ```ts
 export default defineConfig({
-	...configs.client,
-	extends: [bunTest],
-	rules: { ...configs.client.rules, 'bun:test/require-hook': 'off' },
+	extends: [configs.client, bunTest],
+	rules: { 'bun:test/require-hook': 'off' },
 })
 ```
 
@@ -107,10 +104,8 @@ To pick rules one by one, list the plugin and the rules you want. The plugin's n
 
   ```ts
   export default defineConfig({
-  	...configs.client,
-  	extends: [bunTest],
+  	extends: [configs.client, bunTest],
   	overrides: [
-  		...configs.client.overrides,
   		{
   			files: ['test/setup.ts'],
   			rules: { 'bun:test/no-top-level-hooks': 'off', 'bun:test/require-hook': 'off' },
@@ -123,8 +118,8 @@ To pick rules one by one, list the plugin and the rules you want. The plugin's n
 
   ```ts
   export default defineConfig({
-  	...configs.client,
-  	overrides: [...configs.client.overrides, { files: ['**/*.spec.{ts,tsx}'], ...bunTest }],
+  	extends: [configs.client],
+  	overrides: [{ files: ['**/*.spec.{ts,tsx}'], ...bunTest }],
   })
   ```
 

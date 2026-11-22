@@ -2,7 +2,11 @@ import { configs as fmtConfigs } from '@configg/oxc/fmt'
 import { antiSlop, configs as lintConfigs } from '@configg/oxc/lint'
 import { defineConfig } from 'vite-plus'
 
-const ignorePatterns = ['packages/oxc/src/anti-slop/**']
+// The vendored anti-slop source, and preset-test fixtures that are wrong on purpose
+const ignorePatterns = [
+	'packages/oxc/src/anti-slop/**',
+	'packages/oxc/test/presets/fixtures/src/**',
+]
 
 export default defineConfig({
 	fmt: {
@@ -10,8 +14,7 @@ export default defineConfig({
 		ignorePatterns,
 	},
 	lint: {
-		...lintConfigs.scripts,
-		extends: [antiSlop],
+		extends: [lintConfigs.scripts, antiSlop],
 		globals: { Bun: 'readonly' },
 		ignorePatterns,
 		overrides: [

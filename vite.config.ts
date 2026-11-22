@@ -9,10 +9,8 @@ const ignorePatterns = [
 ]
 
 export default defineConfig({
-	fmt: {
-		...fmtConfigs.scripts,
-		ignorePatterns,
-	},
+	// A called preset passes straight through, the same as a plain object
+	fmt: fmtConfigs.scripts.with({ ignorePatterns }),
 	lint: {
 		extends: [lintConfigs.scripts, antiSlop],
 		globals: { Bun: 'readonly' },

@@ -1,6 +1,6 @@
 {
 	"name": "@configg/tsconfig",
-	"version": "0.1.17",
+	"version": "0.1.18",
 	"description": "Strict tsconfig presets for Bun and Vite projects",
 	"keywords": [
 		"config",

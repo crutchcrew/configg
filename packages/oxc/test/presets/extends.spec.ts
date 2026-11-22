@@ -68,3 +68,27 @@ describe('base presets in extends', () => {
 		expect(undefinedGlobals.some((line) => line.startsWith('src/app.ts:1:'))).toBe(true)
 	})
 })
+
+describe('presets called with .with() in extends', () => {
+	it('reports the same diagnostics as the spread equivalent', () => {
+		const expected = lint('client-with-spread')
+
+		expect(expected.length).toBeGreaterThan(0)
+		expect(lint('client-with-extends')).toEqual(expected)
+	})
+
+	it('applies the overrides and keeps the rest of each preset', () => {
+		const codes = new Set(lint('client-with-extends').map((line) => line.split(' ')[1]))
+		const unchanged = new Set(lint('client-addons-extends').map((line) => line.split(' ')[1]))
+
+		// Turned off by .with(), and reported without it
+		expect(unchanged.has('eslint(eqeqeq)')).toBe(true)
+		expect(unchanged.has('react(jsx-key)')).toBe(true)
+		expect(codes.has('eslint(eqeqeq)')).toBe(false)
+		expect(codes.has('react(jsx-key)')).toBe(false)
+		// Still there: the browser env, the react override and the vitest add-on
+		expect(codes.has('eslint(no-undef)')).toBe(true)
+		expect(codes.has('react(only-export-components)')).toBe(true)
+		expect(codes.has('vitest(no-standalone-expect)')).toBe(true)
+	})
+})

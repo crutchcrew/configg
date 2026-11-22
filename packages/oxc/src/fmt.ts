@@ -1,5 +1,11 @@
 import type { OxfmtConfig } from 'oxfmt'
 
+import { definePresets } from './preset.ts'
+
+export type { DeepPartial, Preset } from './preset.ts'
+
+const preset = definePresets<OxfmtConfig>()
+
 const base = {
 	arrowParens: 'always',
 	bracketSameLine: false,
@@ -37,10 +43,11 @@ const sortImports = {
 	],
 } satisfies OxfmtConfig['sortImports']
 
-const server = { ...base, sortImports } satisfies OxfmtConfig
+const server = preset({ ...base, sortImports })
 
+/** Each preset is a plain config object; call `.with(overrides)` on one to deep-merge changes into it. */
 export const configs = {
-	client: {
+	client: preset({
 		...base,
 		endOfLine: 'lf',
 		htmlWhitespaceSensitivity: 'css',
@@ -69,7 +76,7 @@ export const configs = {
 			attributes: ['class', 'className'],
 			functions: ['cx', 'createVariants'],
 		},
-	},
+	}),
 	scripts: server,
 	server,
-} satisfies Record<string, OxfmtConfig>
+}

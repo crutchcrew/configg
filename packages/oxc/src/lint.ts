@@ -1,5 +1,11 @@
 import type { OxlintConfig } from 'oxlint'
 
+import { definePresets } from './preset.ts'
+
+export type { DeepPartial, Preset } from './preset.ts'
+
+const preset = definePresets<OxlintConfig>()
+
 const antiSlopPlugin = { name: 'anti-slop', specifier: `${import.meta.dirname}/anti-slop/index.ts` }
 
 const bunTestPlugin = { name: 'bun:test', specifier: `${import.meta.dirname}/bun-test/index.ts` }
@@ -49,7 +55,7 @@ const sharedRules = {
 } as const satisfies OxlintConfig['rules']
 
 /** Opt in by adding to `extends` after the base preset. The plugin ships as TypeScript, so run oxlint under Bun. */
-export const antiSlop = {
+export const antiSlop = preset({
 	jsPlugins: [antiSlopPlugin],
 	rules: {
 		'anti-slop/no-array-filter-map': 'error',
@@ -73,14 +79,14 @@ export const antiSlop = {
 		// This pushes toward Reflect.apply, which anti-slop/no-reflect-apply forbids.
 		'unicorn/prefer-reflect-apply': 'off',
 	},
-} as const satisfies OxlintConfig
+})
 
 /**
  * Opt in by adding to `extends`: the `bun:test` plugin with its five rules as errors. There is no file glob: the rules
  * only act on files that import from `bun:test`, whatever they are named. The plugin ships as TypeScript, so run oxlint
  * under Bun. Docs: ../docs/bun-test/README.md
  */
-export const bunTest = {
+export const bunTest = preset({
 	jsPlugins: [bunTestPlugin],
 	rules: {
 		'bun:test/consistent-test-it': 'error',
@@ -89,7 +95,7 @@ export const bunTest = {
 		'bun:test/require-top-level-describe': 'error',
 		'bun:test/single-top-level-describe': 'error',
 	},
-} as const satisfies OxlintConfig
+})
 
 const categories = {
 	correctness: 'error',
@@ -109,7 +115,7 @@ const options = {
 /**
  * Opt in by adding to `extends` after `configs.client`: the React plugin, React rule settings and a `*.tsx` override.
  */
-export const react = {
+export const react = preset({
 	overrides: [
 		{
 			files: ['**/*.tsx'],
@@ -127,13 +133,13 @@ export const react = {
 		'react/no-multi-comp': 'off',
 		'react/react-in-jsx-scope': 'off',
 	},
-} as const satisfies OxlintConfig
+})
 
 /**
  * Opt in by adding to `extends`: Vitest and Testing Library (React) rules for `*.spec.{ts,tsx}` files. Needs
  * `eslint-plugin-testing-library`.
  */
-export const vitest = {
+export const vitest = preset({
 	overrides: [
 		{
 			env: {
@@ -193,14 +199,15 @@ export const vitest = {
 			},
 		},
 	],
-} as const satisfies OxlintConfig
+})
 
 /*
  * Base presets work in `extends` as well as spread. Oxlint's `extends` drops a top-level `env` or `globals`, so each
- * preset sets its environment in a catch-all override, which `extends` keeps.
+ * preset sets its environment in a catch-all override, which `extends` keeps. Each one is a plain config object; call
+ * `.with(overrides)` on one to deep-merge changes into it.
  */
 export const configs = {
-	client: {
+	client: preset({
 		categories,
 		options,
 		overrides: [
@@ -232,8 +239,8 @@ export const configs = {
 			'typescript/prefer-readonly-parameter-types': 'off',
 			'unicorn/no-null': 'off',
 		},
-	},
-	scripts: {
+	}),
+	scripts: preset({
 		categories,
 		options,
 		overrides: [
@@ -256,5 +263,5 @@ export const configs = {
 			'sort-vars': 'off',
 			'typescript/prefer-readonly-parameter-types': 'off',
 		},
-	},
-} as const satisfies Record<string, OxlintConfig>
+	}),
+}

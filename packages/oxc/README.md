@@ -11,7 +11,7 @@ bun add -d @configg/oxc oxfmt oxlint oxlint-tsgolint
 
 ## Formatter
 
-`@configg/oxc/fmt` exports `configs`, a record of plain config objects. Pass one to oxfmt's `defineConfig()`.
+`@configg/oxc/fmt` exports `configs`, a record of presets. Each one is a plain config object: pass it to oxfmt's `defineConfig()`, spread it, or call `.with()` on it to change some fields (see [Overriding a preset](#overriding-a-preset)).
 
 ```ts
 // oxfmt.config.ts
@@ -140,6 +140,8 @@ export default defineConfig({
 
 Spreading a preset still works (`{ ...configs.client }`). If you also set `overrides`, include `...configs.client.overrides`, or the environment goes with them.
 
+To change a preset rather than add to it, call `.with()` on it in `extends`: `extends: [configs.client, bunTest.with({ rules: { 'bun:test/require-hook': 'off' } })]`. See [Overriding a preset](#overriding-a-preset).
+
 Both presets allow up to two classes per file, allow `forEach()` and `reduce()`, allow `process.exit()` (CLI scripts and
 shutdown handlers exit with a status code on purpose) and allow short identifiers (`eslint/id-length` is off). They turn `import/prefer-default-export` off, since named
 exports are the convention (it matters once a config adds the `import` plugin), `unicorn/import-style` off, since named
@@ -158,6 +160,36 @@ Both presets make two `pedantic` rules errors rather than warnings: `eslint/eqeq
 `typescript/strict-boolean-expressions` keeps its default options: conditions may be booleans, strings, numbers or
 nullable objects, but not `any` or a broad nullable primitive such as `boolean | undefined` or `string | undefined`, so
 those conditions have to handle the nullish case explicitly.
+
+## Overriding a preset
+
+Every preset and add-on (`configs.client`, `configs.scripts` and `configs.server` from `/fmt`; `configs.client`, `configs.scripts`, `react`, `vitest`, `antiSlop` and `bunTest` from `/lint`) has a `.with(overrides)` method. It returns the preset with `overrides` deep-merged into it, so you write only what differs:
+
+```ts
+import { configs as fmt } from '@configg/oxc/fmt'
+
+// Spread: copy the preset, then copy the nested object again to change one field
+const spread = {
+	...fmt.client,
+	sortTailwindcss: { ...fmt.client.sortTailwindcss, stylesheet: './src/main.css' },
+}
+
+// Call: the same config
+const called = fmt.client.with({ sortTailwindcss: { stylesheet: './src/main.css' } })
+```
+
+How the overrides merge:
+
+- **Plain objects merge** key by key, at any depth. Overriding `sortTailwindcss.stylesheet` keeps `sortTailwindcss.attributes` and `functions`; overriding one rule in `rules` keeps every other rule.
+- **Arrays replace** the preset's array; they don't concatenate. `{ sortTailwindcss: { functions: [] } }` clears the list, and `extends`, `plugins`, `jsPlugins` and a rule's `['warn', { … }]` setting are replaced whole. So is `overrides`: the base lint presets keep their environment in an override, so `configs.client.with({ overrides: […] })` drops the browser env unless you include `...configs.client.overrides`. To add overrides, put them at the top of your own config instead.
+- **Everything else replaces**: strings, numbers, booleans and `null`. A plain object over a non-object, or the other way round, replaces it too: `{ sortTailwindcss: false }` turns sorting off.
+- **`undefined` keeps** the preset's value, so `{ semi: undefined }` changes nothing.
+
+`.with()` never changes the preset. It returns a new preset, so calls chain (`fmt.client.with(a).with(b)`). Its argument is typed as a deep partial of `OxfmtConfig` or `OxlintConfig`, so a misspelled or mistyped key is a type error, and its return type is the full config type. Arrays in the argument are typed whole, since they replace.
+
+`with` is a non-enumerable property. Spreading, `JSON.stringify` and `structuredClone` see only the config's fields, and a preset is still a plain object wherever oxfmt, oxlint and Vite+ expect one: `defineConfig(configs.client)`, `fmt: configs.scripts`, `extends: [configs.client, antiSlop]`, or `options: fmt.client.with({ … })` in an oxfmt override.
+
+`@configg/prettier` presets work differently: you call the preset itself, and its arrays concatenate so that `plugins` accumulate. See [its README](../prettier/README.md).
 
 ## Peer dependencies
 

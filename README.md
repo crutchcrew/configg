@@ -60,6 +60,21 @@ export default defineConfig(configs.client)
 
 Installing a single package works the same way, for example `@configg/oxc/fmt` and `@configg/oxc/lint`.
 
+Every oxfmt and oxlint preset is a plain object, so you can pass it as is or spread it. Call `.with()` on a preset to deep-merge changes into it: nested objects merge, while arrays and other values replace the preset's. See [Overriding a preset](./packages/oxc/README.md#overriding-a-preset).
+
+```ts
+import { configs as fmt } from '@configg/bases/oxfmt'
+
+// Spread
+const spread = {
+	...fmt.client,
+	sortTailwindcss: { ...fmt.client.sortTailwindcss, stylesheet: './src/main.css' },
+}
+
+// Call: the same config
+const called = fmt.client.with({ sortTailwindcss: { stylesheet: './src/main.css' } })
+```
+
 ### Presets
 
 - `oxfmt` exports `configs`: `client` (Tailwind class sorting, import grouping with `react`, `components` and `utils` groups), `scripts` (shared base with import grouping, for tooling and config files) and `server` (same as `scripts`). Built-ins, including `bun` and `bun:*`, come first (after `react` in `client`), then packages, internal and `#/` paths, and relative paths.

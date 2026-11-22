@@ -14,8 +14,9 @@ bun add -d @configg/oxc oxfmt oxlint oxlint-tsgolint
 `@configg/oxc/fmt` exports `configs`, a record of plain config objects. Pass one to oxfmt's `defineConfig()`.
 
 ```ts
-import { configs } from '@configg/oxc/fmt'
 // oxfmt.config.ts
+
+import { configs } from '@configg/oxc/fmt'
 import { defineConfig } from 'oxfmt'
 
 export default defineConfig(configs.client)
@@ -38,18 +39,32 @@ Import grouping, in order:
 
 ## Linter
 
-`@configg/oxc/lint` exports `configs`. Pass one to oxlint's `defineConfig()`.
+`@configg/oxc/lint` exports two base presets in `configs` and four add-on presets. List a base preset first in `extends`, then the add-ons you want:
 
 ```ts
-import { configs } from '@configg/oxc/lint'
 // oxlint.config.ts
+
+import { configs, react, vitest } from '@configg/oxc/lint'
 import { defineConfig } from 'oxlint'
 
-export default defineConfig(configs.client)
+export default defineConfig({
+	extends: [configs.client, react, vitest],
+})
 ```
 
-- `client`: browser env, type-aware, with rules relaxed for component code. Its `**/*.spec.{ts,tsx}` override enables the Vitest env and Testing Library rules, so it needs `eslint-plugin-testing-library`.
+Base presets, in `configs`:
+
+- `client`: browser env, type-aware, with rules relaxed for component code.
 - `scripts`: Node env, type-aware, for tooling and config files.
+
+Add-on presets, each listed after a base preset:
+
+- `react`: the React plugin, React rule settings and a `**/*.tsx` override.
+- `vitest`: the Vitest env, Vitest rules and Testing Library rules for `**/*.spec.{ts,tsx}` files. Needs `eslint-plugin-testing-library`.
+- `antiSlop`: the anti-slop plugin. See below.
+- `bunTest`: the `bun:test` plugin. See below.
+
+Before 0.1.17, `configs.client` included React and Vitest. Add `react` and `vitest` to keep that behaviour.
 
 The Oxlint presets don't enable anti-slop. `antiSlop` from `@configg/oxc/lint` is an opt-in set with the plugin and all 18 rules as errors; `unicorn/prefer-reflect-apply` is off. See [UPSTREAM.md](./src/anti-slop/UPSTREAM.md) for its source and update policy.
 
@@ -57,8 +72,7 @@ The Oxlint presets don't enable anti-slop. `antiSlop` from `@configg/oxc/lint` i
 import { antiSlop, configs } from '@configg/oxc/lint'
 
 export default defineConfig({
-	...configs.client,
-	extends: [antiSlop],
+	extends: [configs.client, antiSlop],
 })
 ```
 
@@ -72,8 +86,7 @@ The plugin ships as TypeScript, so run oxlint under Bun (`bunx --bun oxlint`): N
 import { bunTest, configs } from '@configg/oxc/lint'
 
 export default defineConfig({
-	...configs.client,
-	extends: [bunTest],
+	extends: [configs.client, bunTest],
 })
 ```
 
@@ -91,20 +104,41 @@ The rules match names by their `bun:test` import, so renamed and namespace impor
 
 ### Composing presets
 
-`antiSlop` and `bunTest` are add-on presets: whole Oxlint configs that go in `extends`. Spread the base preset (`configs.client` or `configs.scripts`) at the top of your config and list the add-ons in `extends`:
+Every preset is a whole Oxlint config, so they all go in `extends`: a base preset first, then add-ons. Later entries win where they set the same rule, and your own config wins over all of them:
 
 ```ts
 import { antiSlop, bunTest, configs } from '@configg/oxc/lint'
 
 export default defineConfig({
-	...configs.client,
-	extends: [antiSlop, bunTest],
+	extends: [configs.client, antiSlop, bunTest],
+	rules: { 'bun:test/require-hook': 'off' },
 })
 ```
 
-Spread the base preset rather than putting it in `extends`: Oxlint's `extends` passes on `rules`, `categories`, `plugins`, `jsPlugins`, `overrides` and `options`, but not `env` or `globals`, so a base preset in `extends` loses its browser or Node globals.
+Oxlint's `extends` passes on `rules`, `categories`, `plugins`, `jsPlugins`, `options` and every `overrides` entry, but drops a top-level `env` or `globals`. The base presets set their environment in a catch-all `files: ['**/*']` override, so it survives. Nothing has to be repeated at the top of your config: `options` (`typeAware`, `typeCheck`) comes through too. Set your own `ignorePatterns` and `settings` at the top of your config as usual. A top-level `env` or `globals` there adds to a base preset's environment but can't take anything away from it, because the preset's override applies after it. That holds when you spread a preset too. To switch part of the environment off, use an override of your own:
 
-To turn off a rule an add-on enables, set it in your own `rules`: `rules: { ...configs.client.rules, 'bun:test/require-hook': 'off' }`. Your config applies after everything in `extends`.
+```ts
+export default defineConfig({
+	extends: [configs.client],
+	// Node globals on top of the browser env
+	env: { node: true },
+	// No browser globals in server code
+	overrides: [{ files: ['src/server/**'], env: { browser: false } }],
+})
+```
+
+Your top-level `rules` turn off a rule a preset sets at its top level, but not one it sets inside an override, such as `vitest`'s spec-file rules or `react`'s `*.tsx` rules. For those, add an override of your own, which applies after the presets':
+
+```ts
+export default defineConfig({
+	extends: [configs.client, react, vitest],
+	overrides: [
+		{ files: ['**/*.spec.{ts,tsx}'], rules: { 'testing-library/no-node-access': 'off' } },
+	],
+})
+```
+
+Spreading a preset still works (`{ ...configs.client }`). If you also set `overrides`, include `...configs.client.overrides`, or the environment goes with them.
 
 Both presets allow up to two classes per file, allow `forEach()` and `reduce()`, allow `process.exit()` (CLI scripts and
 shutdown handlers exit with a status code on purpose) and allow short identifiers (`eslint/id-length` is off). They turn `import/prefer-default-export` off, since named
@@ -127,4 +161,4 @@ those conditions have to handle the nullish case explicitly.
 
 ## Peer dependencies
 
-`oxfmt`, `oxlint`, `oxlint-tsgolint` and `eslint-plugin-testing-library` are all optional peers, so you install only the ones the presets you use need.
+`oxfmt`, `oxlint`, `oxlint-tsgolint` and `eslint-plugin-testing-library` (for the `vitest` add-on) are all optional peers, so you install only the ones the presets you use need.

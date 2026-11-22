@@ -36,16 +36,18 @@ bun add -d @configg/bases oxfmt oxlint oxlint-tsgolint typescript
 ```
 
 ```ts
-import { configs } from '@configg/bases/oxfmt'
 // oxfmt.config.ts
+
+import { configs } from '@configg/bases/oxfmt'
 import { defineConfig } from 'oxfmt'
 
 export default defineConfig(configs.client)
 ```
 
 ```ts
-import { configs } from '@configg/bases/oxlint'
 // oxlint.config.ts
+
+import { configs } from '@configg/bases/oxlint'
 import { defineConfig } from 'oxlint'
 
 export default defineConfig(configs.client)
@@ -61,7 +63,7 @@ Installing a single package works the same way, for example `@configg/oxc/fmt` a
 ### Presets
 
 - `oxfmt` exports `configs`: `client` (Tailwind class sorting, import grouping with `react`, `components` and `utils` groups), `scripts` (shared base with import grouping, for tooling and config files) and `server` (same as `scripts`). Built-ins, including `bun` and `bun:*`, come first (after `react` in `client`), then packages, internal and `#/` paths, and relative paths.
-- `oxlint` exports `configs`: `client` (browser env, React, and a `**/*.spec.{ts,tsx}` override with Vitest and Testing Library rules) and `scripts` (Node env).
+- `oxlint` exports two base presets in `configs`, `client` (browser env) and `scripts` (Node env), and add-on presets: `react`, `vitest` (Vitest and Testing Library rules for spec files), `antiSlop` and `bunTest`. List them in `extends`, base first: `extends: [configs.client, react, vitest]`. Before 0.1.17, `client` included React and Vitest.
 - `prettier` exports `config` (the same options as oxfmt), one preset per plugin (`sortImports`, `astro`, `svelte`, `tailwind`) and `combine()` to merge them: `combine(config, sortImports, tailwind({ tailwindStylesheet: './src/main.css' }))`. See [its README](./packages/prettier/README.md).
 - `tsconfig/bun` (`strictest` + Bun), `tsconfig/vite` (`strictest` + Vite/React) and `tsconfig/client` (`vite` with ambient `types` cleared, so a package only picks up the `@types/*` it asks for).
 
@@ -71,8 +73,7 @@ The Oxlint presets don't enable anti-slop. `antiSlop` from the oxlint entry is a
 import { antiSlop, configs } from '@configg/bases/oxlint'
 
 export default defineConfig({
-	...configs.client,
-	extends: [antiSlop],
+	extends: [configs.client, antiSlop],
 })
 ```
 
@@ -80,9 +81,9 @@ The plugin ships as TypeScript, so run oxlint under Bun (`bunx --bun oxlint`): N
 
 `bunTest` from the oxlint entry is an opt-in preset for `bun:test` specs: a `bun:test` plugin whose five rules see `describe`, `it` and the hooks when they're imported from `bun:test`, which oxlint's built-in `jest`/`vitest` rules don't. Add it with `extends: [bunTest]`; it has no file glob and checks any file that imports from `bun:test`. See [its docs](./packages/oxc/docs/bun-test/README.md).
 
-Spread the base preset and put the add-ons in `extends` (`{ ...configs.client, extends: [antiSlop, bunTest] }`): Oxlint's `extends` doesn't pass on `env` or `globals`, so a base preset in `extends` loses them. See [Composing presets](./packages/oxc/README.md#composing-presets).
+Every preset goes in `extends`, base first: `extends: [configs.client, antiSlop, bunTest]`. The base presets keep their environment through `extends`. See [Composing presets](./packages/oxc/README.md#composing-presets).
 
-`eslint-plugin-testing-library` is only needed for `configs.client` in the oxlint preset.
+`eslint-plugin-testing-library` is only needed for the `vitest` add-on in the oxlint preset.
 
 ## Development
 

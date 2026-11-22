@@ -1,6 +1,6 @@
 {
 	"name": "@configg/bases",
-	"version": "0.1.17",
+	"version": "0.1.18",
 	"description": "All @configg presets in one package: oxc, prettier and tsconfig",
 	"keywords": [
 		"config",
